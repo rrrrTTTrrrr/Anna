@@ -1,0 +1,18 @@
+
+
+
+
+
+
+
+
+
+Lock entered - Lock entered - 0
+0
+The object is free
+Locked 2
+0  2
+1  2
+Lock entered - Unlock entered - 0
+Unlock due
+Lock entered - 0

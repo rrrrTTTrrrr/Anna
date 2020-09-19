@@ -1,0 +1,89 @@
+/* This is the style sheet for the home page */
+
+/* This classes are used to create grid areas */
+
+/* This class is used by all links to prevent the under line */
+.NoUnderLineForLink {
+  text-decoration: none; 
+  color: #333333;
+}
+
+/* This is used to defined the grid of the page, it helps set the HTML elements into the right location easily and allows for the change of the location
+   of those elements if the window size is changing or if the screen size is different */
+.Grid {
+
+  font-family: 'Lato', sans-serif;
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 50px 600px 300px;
+  grid-template-areas: "header header header"
+                       "body body body"
+                       "footer footer footer";
+}
+
+/* This will style the header part of the grid */
+.Header {
+    grid-area: header;
+    background-color: #DCDCDC;
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 80px 80px 100px;
+    grid-template-rows: 20px 50px;
+}
+
+  .HeaderLogoStyle {
+      grid-column: 2;
+      grid-row: 2;
+      color: #333333;
+  }
+
+  .HeaderMotivationStyle {
+      grid-column: 3;
+      grid-row: 2;
+  }
+
+  .HeaderHowItWorksStyle {
+      grid-column: 4;
+      grid-row: 2;
+  }
+
+  .HeaderLoginStyle {
+      grid-column: 10;
+      grid-row: 2;
+  }
+
+  .HeaderJoinStyle {
+      grid-column: 11;
+      grid-row: 2;
+  }
+
+/* This will style the body part of the grid */
+.Body {
+    grid-area: body;
+    background-color: #DCDCDC;
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 100px;
+    grid-template-rows: 100px 100px 100px 100px 1fr;
+    text-align: center;
+}
+
+  .BodyMainText {
+    grid-column: 6 / 11;
+    grid-row: 2 / 3;
+    color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 300%;
+    color: #333333;
+  }
+
+  .BodySearchBox {
+    grid-column: 6 / 8;
+    grid-row: 5; 
+  }
+
+.footer {
+    grid-area: footer;
+    background-color: #B3B3B3;
+}
+

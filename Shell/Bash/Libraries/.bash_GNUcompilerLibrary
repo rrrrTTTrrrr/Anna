@@ -1,0 +1,438 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#									 GNU Compiler Library - the library will provide the functionality for using the GNU compiler and debugger 			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_8="$BASH_DIRECTORY_FULL_PATH/Libraries/.bash_GNUcompilerLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                         GNU COMPILER LIBRARY                                                                            ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                             DISPLAY INFORMATION                                                                              #
+################################################################################################################################################################################
+
+
+
+function DisplayAsciiTable {  #Display ascii table
+	
+	eog $ROOT_DIRECTORY_FULL_PATH/Content/FrequentlyUsedInformationPhotos/AsciiTable.gif & disown
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dispascii='DisplayAsciiTable'
+
+
+function DisplayBitwiseOperations {  #Display the chart of bitwise operations
+	
+	eog $ROOT_DIRECTORY_FULL_PATH/Content/FrequentlyUsedInformationPhotos/BitwiseOperations.gif & disown
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dispbitwise='DisplayBitwiseOperations'
+
+
+function DisplayOperatorPrecedence {  #Display the chart with the operator precedence
+	
+	eog $ROOT_DIRECTORY_FULL_PATH/Content/FrequentlyUsedInformationPhotos/OperatorsPrecedence.png & disown
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dispop='DisplayOperatorPrecedence'
+
+
+function DisplayRFLAGS {  #Display the chart with the RFLAGS bits information
+	
+	eog $ROOT_DIRECTORY_FULL_PATH/Content/FrequentlyUsedInformationPhotos/RFLAGS.png & disown
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias disprf='DisplayRFLAGS'
+
+
+function DisplayCondtionalJumpsAssembly {  #Display the chart with the conditional jumps
+	
+	eog $ROOT_DIRECTORY_FULL_PATH/Content/FrequentlyUsedInformationPhotos/ConditionalJumpInstructions.jpg & disown
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dispcj='DisplayCondtionalJumpsAssembly'
+
+
+function DisplayIntelGeneralPurposeRegisters {  #Display the chart with the Intel general purpose registers
+	
+	eog $ROOT_DIRECTORY_FULL_PATH/Content/FrequentlyUsedInformationPhotos/Intel64bitGeneralPPurposeRegisters.png & disown
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dispgp='DisplayIntelGeneralPurposeRegisters'
+
+
+
+################################################################################################################################################################################
+#                                                                                Repositories                                                                                  #
+################################################################################################################################################################################
+
+
+
+function RepositoryExist {  #Check if the given repository exist
+#$@ - this is the repository name to check if exist
+
+	grep ^ /etc/apt/sources.list /etc/apt/sources.list.d/* | grep -q $@
+		if [ $? -eq 0 ]
+		then
+			return 1
+		else
+			return 0
+		fi
+
+}
+alias bghfnmyhjmjkkgggggkkkscfdscdscdscdk='RepositoryExist'
+
+
+function AddUbuntuToolchainRepository {  #Check if the ubuntu-toolchain-r/test repository exist and if not add it. This repository conatins GCC and G++
+#This is the ppa - ubuntu-toolchain-r/test
+
+	RepositoryExist ubuntu-toolchain-r/test
+		if [ $? -eq 0 ]
+		then
+
+			sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $ACTIVE_SESSION_LOG_FILE_FULL_PATH $FILE_FULL_PATH_8 $FUNCNAME "Failed to add ubuntu-toolchain-r/test repository\n"
+					return 1
+				fi
+
+			sudo apt-get update
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $ACTIVE_SESSION_LOG_FILE_FULL_PATH $FILE_FULL_PATH_8 $FUNCNAME "Failed to update repositories ppa's\n"
+					return 1
+				fi
+
+		fi
+
+	return 0
+}
+alias bghfnmyhjmjkkgrrrrrrrrggggkkkscfdscdscdscdk='AddUbuntuToolchainRepository'
+
+
+
+################################################################################################################################################################################
+#                                                                                 	  COMPILE FLAGS                                                                            #
+################################################################################################################################################################################
+
+
+
+# The follwoing flags determind the compilation environment for the executable!!
+
+
+# Flags controlling the kind of output :
+#
+#	1. -c  - compile or assemvle the source files, but do not link. The linking stage simply is not done. The ultimate output is in the form of an object file for each
+#			 source file ( suffix .o )
+#
+#	2. -S  - stop after the stage of compilation proper, do not assemble. The output is in the form of an assembler code file for each non assembler input file specified ( suffix .s )
+#
+#	3. -E  - stop after the preprocessing stage, do not run the compiler proper. The output is in the form of preprocessed source code, which is sent to the standard output
+#
+#	4. -o  - use to set a name to the output file
+
+
+# Options controlling C Dialect :
+#
+#	1. -std=  - determine the language standard
+
+
+# Options to request or suppress warnings :
+#
+#	1. -Werror  - make all warnings errors
+#
+#	2. -Wpedantic  - issue all the warnings demanded by strict ISO C and ISO C++, reject all programs that use forbidden extensions, and some other programs that do not follow
+#					 the ISO C or ISO C++
+#
+#	3. -Wall  - this enables almost the warnings
+#
+#	4. -Wextra  - this enables some extra warnings flags that "-Wall" do not enable
+
+
+# Options for debugging :
+#
+#	1. -g  - produce debugging infromation in the operating system's native format
+
+
+# To add a macro definition through the command line to the compiled code use the D option:
+#
+#	-D MACRO OR -D MACRO=VALUE
+
+
+# Check the the code follows "Effective C++" guide lines :
+#
+# 
+
+
+########################################################################   Compiler optimizations   ###########################################################################
+
+
+# With out any optimization option, the compiler's goal is to reduce the cost of compilation and to make debugging produce the expected results. Statements are independent, to
+# allow break points between them. Turning on optimization flags makes the compiler attempt to improve the performance and/or code size at the expense of compilation time and
+# possibly the ability to debug the program. The compiler performs optimization based on the knowledge it has of the program. Compiling multiple files at once to a single output
+# file mode allows the compiler to use information gained from all of the files when compiling each of them
+# 
+# Depending on the target and how GCC was configured, a slightly different set of optimizations may be enabled at each -O level than those listed here!
+# 
+# With -O, the compiler tries to reduce code size and execution time, without performing any optimizations that take a great deal of compilation time
+
+
+
+################################################################################################################################################################################
+#                                                                                 	COMPILE FUNCTIONS                                                                          #
+################################################################################################################################################################################
+
+
+
+function GNU_CompileFileDebugCPP2020 {  #Use this function to compile a program as C++ standard 2020, with debug information and compiler optimizations
+#$@ - file name
+
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	g++-9 -m64 -masm=intel -std=c++2a -Werror -Wpedantic -g -D TEST_MODE $@	
+		if [ $? -ne 0 ]
+		then
+			printf "\n\n\n\n\n\n\n\n\n"
+			return 1
+		fi
+	
+	./a.out
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	return 0
+}
+alias g20d='GNU_CompileFileDebugCPP2020'
+
+
+function GNU_CompileFileReleaseCPP2020 {  #Use this function to compile a program as C++ standard 2020 and compiler optimizations
+#$@ - file name
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	g++-9 -m64 -masm=intel -std=c++2a -Werror -Wpedantic -O3 $@	
+		if [ $? -ne 0 ]
+		then
+			printf "\n\n\n\n\n\n\n\n\n"
+			return 1
+		fi
+	
+	./a.out
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	return 0
+}
+alias g20r='GNU_CompileFileReleaseCPP2020'
+
+
+function GNU_CompileFileDebugIgnoreWarningsCPP2020 {  #Use this function to compile a program as C++ standard 2020, with debug information and compiler optimizations
+												#but ignore compiler warnings
+#$@ - file name
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	g++-9 -m64 -masm=intel -std=c++2a -Werror -Wpedantic -g -D TEST_MODE $@	
+		if [ $? -ne 0 ]
+		then
+			printf "\n\n\n\n\n\n\n\n\n"
+			return 1
+		fi
+	
+	./a.out
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	return 0
+}
+alias g20dnw='GNU_CompileFileDebugIgnoreWarningsCPP2020'
+
+
+function GNU_CreateAssemblyCodeAndDisplayTheResult {  #Use this function to compile a program as C++ standard 2020, with debug information 
+												  #and compiler optimizations only until the assembly code, and display the content
+#$@ - file name
+	
+	g++-9 -S -m64 -masm=intel -std=c++2a -Werror -Wpedantic $@	
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	subl $@.s
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi	
+	
+	return 0
+}
+alias createassembly='GNU_CreateAssemblyCodeAndDisplayTheResult'
+
+
+function GNU_CreatePreprocessedCodeAndDisplayTheResult {  #Use this function to only preprocess the source code and display the content
+#$@ - file name
+	
+	g++-9 -E -o PreproccessedSourceCode.cpp $@	
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	subl PreproccessedSourceCode.cpp
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+		
+	return 0
+}
+alias createprepro='GNU_CreatePreprocessedCodeAndDisplayTheResult'
+
+
+################################################################################################################################################################################
+#                                                                            GNU DEBUGGER ( GDB )                                                                              #
+################################################################################################################################################################################
+
+
+
+# Alias to run the executable on created on the directory ( as long the convention a.out is not changed ) using gdb
+alias gdba='gdb ./a.out'
+
+
+#################################################################################   OVERVIEW    ################################################################################
+
+
+# The GNU Project debugger, allows to see the internals of another program while it executes, and what the program was doing at the moment it crashed. GDB 
+# can do four main kinds of things to help catch bugs in the act :
+#
+# 	1. Start the program, specifying anything that might affect its behavior
+# 	2. Make the program stop on specified conditions
+# 	3. Examine what has happened, when the program has stopped
+# 	4. Change things in the program, so you can experiment with correcting the effects of one bug and go on to learn about another
+#
+# The program being debugged can be written in Ada, C, C++, Objective-C, Pascal ( and many other languages ). Those programs might be executing on the same 
+# machine as GDB ( native ) or on another machine ( remote ). GDB can run on most popular UNIX and Microsoft Windows variants
+
+
+function AttachToRunningProcessWithGDB {  #Use to attach to current running program
+#$@ - process ID
+
+	# GDB can attach to current running program using it's process ID
+	gdb --pid=$@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $ACTIVE_SESSION_LOG_FILE_FULL_PATH $FILE_FULL_PATH_8 $FUNCNAME "Failed opening a gdb session\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias attgdb='AttachToRunningProcessWithGDB'
+
+
+#########################################################################   STEPPING THROUGH THE CODE    #######################################################################
+
+
+# Ctrl+X + Ctrl+A - to split the windows, this way the source code is also displayed
+#
+# 1. next -> run program until next line, then pause
+# 2. step -> run the next instruction, not line, then pause
+# 3. finish -> finish executing the current function, then pause
+# 4. up  -> when in ctrl+x and ctrl+a state use this to move to the calling function
+# 5. down -> when in ctrl+x and ctrl+a state use this to move to the called function
+# 6. fin -> use to move to the end of current function
+
+
+########################################################################    BREAKPOINTS AND WATCHPOINTS    #####################################################################
+
+
+# 1. watch condition  ->  set a watchpoint, which pauses the program when a condition changes
+#
+# 2. continue  ->  resume execution after being paused
+#
+# 3. delete n  ->  delete breakpoint n
+#
+# 4. To set conditionas on breakpoints  ->  break line_number if i === 100 
+
+
+###################################################################################   PRINT OPTIONS     ########################################################################
+
+
+# To print a the value of an object or the result of a function call use   ->   p object OR p function()
+#
+# To print as hexadecimal representation -> print /x object
+#
+# To print the bits of an object use  ->  p /t object
+ 

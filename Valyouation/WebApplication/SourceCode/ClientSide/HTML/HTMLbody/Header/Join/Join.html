@@ -1,0 +1,51 @@
+<!-- This is the html file for ValYouation home page -->
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <!-- This will be displayed in the upprt tab -->
+    <title>ValYouation</title>
+
+    <!-- This is needed to state the type of the file -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  </head>
+
+
+  <body>
+
+    <!-- This is used to create a CSS grid. The CSS grid helps setting the layout of the content and deal with different sizes of screens -->
+    <div class="Grid">
+
+      <!-- A form element to fill all the required information to create an account -->
+      <form id="JoinForm" name="JoinForm">
+
+          <!-- An entry for E-mail -->
+          <input type="text" id="Email" name="Email" placeholder="E-mail">
+
+          <!-- An entry for password -->
+          <input type="password" id="Password" name="Password" placeholder="Password">
+
+          <!-- An entry for to confirm password -->
+          <input type="password" id="ConfirmPassword" name="ConfirmPassword" placeholder="Confirm password">
+
+          <!-- A button to submit the form after finished to fill it -->
+          <button type="button" id="SubmitButton" name="SubmitButton">Submit</button>
+
+      </form>
+
+    </div>
+
+    <!-- Add all the required javascript files -->
+    <script src="http://localhost/SourceCode/Scripts/JavaScript/Validate/GeneralValidateFunctions/ValidateEmail.js"></script>
+    <script src="http://localhost/SourceCode/Scripts/JavaScript/Validate/ValidateForms/ValidateJoinForm.js"></script>
+    <script src="http://localhost/SourceCode/Scripts/JavaScript/Body/Join.js"></script>
+    <script src="http://localhost/SourceCode/Scripts/JavaScript/Objects/HTTPrequest/HTTPrequest.js"></script>
+
+  </body>
+
+</html>
+

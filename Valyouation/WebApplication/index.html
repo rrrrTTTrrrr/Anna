@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+
+<!-- This is the home page of Valyouation -->
+
+<html lang="en-US">
+
+	<head>
+
+		<!-- This will be displayed in the upprt tab -->
+		<title>ValYouation</title>
+
+		<!-- This is needed to state the type of the file -->
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+		<!-- File origins -->
+		<meta name="author" content="rrrrTTTrrrr">
+
+		<!-- Add all the css source files -->
+		<link rel="stylesheet" type="text/css" href="http://localhost/SourceCode/ClientSide/CSS/Layout.css">
+		<link rel="stylesheet" type="text/css" href="http://localhost/SourceCode/ClientSide/CSS/Style.css">
+
+		<!-- Add the link to the roboto google font -->
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100"> 
+
+	</head>
+
+	<body>
+
+		<div class="Grid">
+			
+			<div id="Header" name="Header" class="HeaderLayout HeaderStyle">
+
+				<!-- This is a link to the home page view -->
+				<div id="Logo" class="LogoLayout LogoStyle">Valyouation</div>
+
+				<!-- This is a link to the motivation view -->
+				<div id="Motivation" class="MotivationLayout MotivationStyle">Motivation</div>
+
+				<!-- This is a link to the how it works view -->
+				<div id="HowItWorks" class="HowItWorksLayout HowItWorksStyle">How it works</div>
+
+				<!-- This is a link to the log in view -->
+				<div id="Login" class="LoginLayout LoginStyle">Login</div>
+
+				<!-- This is a link to the joint view -->
+				<div id="Join" class="JoinLayout JoinStyle">Join</div>
+			
+			</div>
+			
+			<div id="Body" name="Body" class="Layout Style">
+
+				<!-- This is the main content that will be seen on the home page -->      
+				<div id="MainText" class="MainTextLayout MainTextStyle">Find out what others think your services worth</div>
+
+				<div id="SearchBox" class="SearchBoxLayout SearchBoxStyle">
+
+				  <input type="text" id="SearchButton" name="SearchButton" placeholder="What will you like to price today??" size="40" />
+
+				</div>
+
+    		</div>
+
+    		<div id="Footer" name="Footer" class="FooterLayout FooterStyle">
+
+				<!-- This is a link to the crypto coin view -->
+				<div id="Coin" name="Coin" class="gridLocation8">MMM</div>
+
+    		</div>
+
+  		</div>
+
+  		<!-- Call the java script file, that contains the functionality of how to upload javascript files without blocking. This is done
+  		     by dynamically adding the client side which stored in one file. So the first file blocks but it is very small and only used
+  		     to dynamically load the client side -->
+  		<script src="http://localhost/SourceCode/ClientSide/LoadScript.js"></script>
+
+  		<!-- Load the client side -->
+  		<script>
+
+  			LoadScript( "http://localhost/SourceCode/ClientSide/Client.js", function() {} );
+
+  		</script>
+
+	</body>
+
+</html>

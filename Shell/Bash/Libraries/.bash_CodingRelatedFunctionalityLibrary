@@ -1,0 +1,213 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#						        Coding Related Functionality Library - this script is a library containing functions to help improve coding time
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_34="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_CodingRelatedFunctionality"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                         CODING RELATED FUNCTIONALITY    			                                                     ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+function NoInstances {  # Use this function to copy to the clipboard the comment plus the macro 'NoInstances'
+
+	printf "			// Disable all default generated methods - constructor, destructor, copy constructor, assignment operator, move constructor and move assignment operator\n			NoInstances_MACRO( ObjectName )" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias noinst='NoInstances'
+
+
+function DisableCopyAndMove {  # Use this function to copy to the clipboard the comment plus the macro 'DisableCopyAndMove_MACRO'
+
+	printf "			// Disable all copy and move related methods, this include the copy constructor, move constructor, assignment operator and move assignment operator\n			DisableCopyAndMove_MACRO( ObjectName )" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias discm='DisableCopyAndMove'
+
+
+function DisableCopy {  # Use this function to copy to the clipboard the comment plus the macro 'DisableCopyConstructorAndAssignmentOperator_MACRO'
+
+	printf "			// Disable all the abilites of the object to copy itself, this include the copy constructor and assignment operator\n			DisableCopyConstructorAndAssignmentOperator_MACRO( ObjectName )" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias discopy='DisableCopy'
+
+
+function DisableMove {  # Use this function to copy to the clipboard the comment plus the macro 'DisableMoveConstructorAndMoveAssignmentOperatorForTemplateObject_MACRO'
+
+	printf "			// Disable all the abilites of the object to copy itself, this include the copy constructor and assignment operator\n			DisableMoveConstructorAndMoveAssignmentOperatorForTemplateObject_MACRO( ObjectName )" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias dismove='DisableMove'
+
+
+function TemplateSpecializationComment {  # Use this function to copy to the clipboard the comment for a template specialization
+
+	printf "// ************************************************************************************************************************************************************************** //\n\
+//                                                                                                                                                                            //\n\
+// **************************************************   TEMPLATE SPECIALIZATION IMPLEMENTATION -                          *************************************************** //\n\
+//                                                                                                                                                                            //\n\
+// ************************************************************************************************************************************************************************** //" | copyout
+
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias temspe='TemplateSpecializationComment'
+
+
+function AssertMacroWithComment {  # Use this function to copy to the clipboard the comment plus the macro 'Assert_MACRO'
+
+	printf "			// Each method that interacts with the user directly needs to ensure that the given data is valid, and that the current\n
+			// instance is ready to be used\n
+			Assert_MACRO( (), \"\" )" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias ass='AssertMacroWithComment'
+
+
+function StaticAssertMacroWithComment {  # Use this function to copy to the clipboard the comment plus the macro 'CompileTimeAssert'
+
+	printf "			// Assert all the requirements on the template arguments provided to the object. To perform a compile time assert the C++ language provides\n\
+			// the keyword 'static_assert', which receives an expression and an error message to display if the expression result is false. The important\n\
+			// thing is that the expression is evaluted during compile time, and therefore if the expression is false the compilation will be terminated\n\
+			// and the error message will be displayed. This method should not be used, because it does nothing during run time\n\
+			CompileTimeAssert( ( ArraySize > 0UL ), \"\" );\n\n" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias staticass='StaticAssertMacroWithComment'
+
+
+function GetAndSetForMembers {  # Use this function to copy to the clipboard the get and set for members part of the object
+
+	printf "			// This part will contain all the get and set methods for the members of the object :\n\n\n\
+			// Member - \n\
+			Get_MACRO( GetMethodName, MemberName, MemberType )\n\
+			GetOnlyIfInstanceIsReady_MACRO( GetMethodName, MemberName, MemberType )\n\
+			Set_MACRO( SetMethodName, MemberName, MemberType )\n\
+			SetOnlyIfInstanceIsReady_MACRO( SetMethodName, MemberName, MemberType )\n\n" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias getandset='GetAndSetForMembers'
+
+
+function SanityCheckWithConstraints {  # Use this function to copy to the clipboard the sanity check line to add to each object test, with constraints
+
+	printf "// Create a tuple with the constraints for the sanity check\n\
+Tuple<  > constraintsTuple( NumericRange< UnsignedInteger64bits >( 1UL, 10000UL ) );\n\n\
+
+// Perform a sanity check to ensure that all the methods that are common among all objects, for example defualt constructor, copy constructor,\n\
+// destructor, swap and more, are working correctly\n\
+Testing::SanityCheck< ObjectToTestType COMMA ConstructorArgumentConstraintsTupleType COMMA ConstructorArgumentTypes... >::Full( constraintsTuple );\n\n" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias csanity='SanityCheckWithConstraints'
+
+
+function SanityCheckWithoutConstraints {  # Use this function to copy to the clipboard the sanity check line to add to each object test, without constraints
+
+	printf "// Perform a sanity check to ensure that all the methods that are common among all objects, for example defualt constructor, copy constructor,\n\
+// destructor, swap and more, are working correctly\n\
+Testing::SanityCheck< ObjectToTestType COMMA ConstructorArgumentConstraintsTupleType COMMA ConstructorArgumentTypes... >::Full();\n\n" | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias sanity='SanityCheckWithoutConstraints'
+
+
+function MacroPrelude {  # Use this function to copy to the clipboard the sanity check line to add to each object test, without constraints
+
+	printf "// The following macro is defined to ...
+//
+// The required arguments are :
+//
+//		1." | copyout
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+	
+	return 0
+}
+alias macrop='MacroPrelude'

@@ -1,0 +1,84 @@
+#!/bin/bash
+
+
+
+
+#										ShellPattern - this script is used to create a pattern to start a new shell project
+
+
+
+
+
+
+##################################################################################################################################################################
+##################################################################################################################################################################
+###      																								  													   ###
+###      							                                      NEW SHELL PROJECT  					      										   ###
+###      																								  													   ###
+##################################################################################################################################################################
+##################################################################################################################################################################
+
+
+function CreateNewShellFileWithBasicTemplateInside {  #Use to open a new file with the shell template inside
+#$@ - new shell program name
+	
+	GoToDirectory /home/$USER/Anna/AnnaVersions/$LAST_VERSION/Utilities/Shell/
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+printf "#include <iostream>  //  Class std::bad_alloc\n#include <errno.hpp>  //  Macro errno\n\n\n#include \"../ErrorHandling/Exception.hpp\"  //  Class Exception\n\
+#include \"../BasicUtilities/cpp_BasicUtilities.hpp\"  //  Function ThrowIfErrnoIsNotSetToEINTR\n#include \"../ProccesInterCommunication/StandardInputOutputError.hpp\"  \
+//  Function WriteToStandardError\n\n\n// This file is used as template when creating a new shell executable, becuase\n// every program that the shell run \
+should be able to deal with the special\n// aspects. This includes :\n//\n// 1. Pipe - other programs should be able to send and receive data from current \
+progarm,\n// the character \"|\" ( pipe sign ) is used to initiate the communication\n//\n// 2. File - the progarm must be able to receive it's input from a file \
+and write it's output\n// to a file, the character \"<\" ( input from file redirection ) are used to notify that\n// the input to the program should be read from \
+the file, the characters \">\",\">>\" ( output\n// to file redirection ) are used to store the output of the progarm into a file, the difference\n// between \
+them is that, the character \">\" will erase the current content of a file and replace it\n// with the output, if the file with the required name doesn't exist \
+creates it and then insert\n// the data, while the character \">>\" only append the data to a current existing file\n\n\nnamespace Universe\n{\n\n\n    // Create \
+a macro to store the required number of command line arguments\n    #define NUMBER_OF_ARGUMENTS_REQUIRED_FROM_COMMAND_LINE 2\n\n    // Check that the required \
+amount of command line arguments was given, if the number \n    // of command line arguments given is lower then the required amount\n    // in \
+NUMBER_OF_ARGUMENTS_REQUIRED_FROM_COMMAND_LINE, writes an error\n    // message to Standard error, and return the ERROR_VALUE\n    #define \
+RETURN_ERROR_IF_NOT_ENOUGH_COMMAND_LINE_ARRGUMENTS( ARGC, ERROR_VALUE ) if ( ( ARGC < NUMBER_OF_ARGUMENTS_REQUIRED_FROM_COMMAND_LINE ) ) \n    																\
+{ WriteToStandardError( \
+\"Not enough command line arguments given\" ); return ( ERROR_VALUE ); }\n\n\n    // To Check if parent process opened a pipe to current process, do it\n    // \
+by using the poll system call. It is used wait for some event on a file descriptor.\n    // The poll system call receive an amount of pollfd structures, every \
+one contain \n    // a file descritor and events which should be checked if they happened to the\n    // file descriptor. The system call is also given the \
+number of structures, and a \n    // time out value in miliseconds. The system call returns on success the number\n    // of structures which have a non zero \
+revents field, this field is set by\n    // the system call and describe the events which have happend to each of the file\n    // descriptors. The system call \
+returns 0 if the time out has passed and\n    // no file descriptor was ready. On failure -1 is returned and errno is set\n    // accordingly, Syntax :\n    //\n    \
+// 	  int poll( struct pollfd *fds, nfds_t nfds, int timeout )\n\n\n    // Use to check if parent process opened a pipe to current process, it does\n    \
+// that by checking if standrd input has data to read, returns true in case\n    // a data exist, and false otherwise, if the poll system call failed and it\n    \
+// wasn't due to signal interrupt throws an exception\n    inline bool DoesDataWaitOnStandardInput() throw()\n    {\n    	// Create a pollfd structure\n    	\
+struct pollfd pollFileDescriptor;\n\n    	// Set inside the file descriptor filed in pollfd structure the standard input\n    	// file descriptor ( 0 )\n    	\
+pollFileDescriptor.fd = 0;\n\n    	// Set inside the events filed in pollfd structure the POLLIN macro\n\n    	// which stand for, check if there is data to read \
+from file descriptor\n    	pollFileDescriptor.events = POLLIN;\n\n    	// Create an object to store the return value from the system call poll\n    	int \
+pollReturnValue = 0;\n\n    	// Loop until the return value from poll is not -1\n    	while ( -1 == ( pollReturnValue = poll( &pollFileDescriptor, 1, 0 \
+) ) )\n    	{\n    		// Check the reason for the failure and if it is not\n    		// becuase of signal interrupt throw an Exception\n    		\
+ThrowIfErrnoIsNotSetToEINTR( \"DoesDataWaitOnStandardInput failed becuase poll failed\" );\n    	}\n\n    	// If a file descriptor is ready for reading \
+the return value from poll\n    	// would be one, and else zero, just return it\n    	return ( pollReturnValue );\n    }\n\n\n}  //  namespace Universe\n\n\n \
+using namespace Universe;\n\n\nint main( int argc, const char** argv )\n{\n\n    try\n    {\n\n    	// check if parent process opened a pipe to current process\n    	\
+if ( true == DoesDataWaitOnStandardInput() )\n    	{\n    		// Read the data from standard input file descriptor ( 0 )\n    		TODO \
+dataFromStandradInput = ReadArrayOfArraysFromStandardInput(< TODO >( TODO, TODO ) );\n\n    		// Check if the operation succeeded\n    		\
+ThrowExceptionWithErrnoIfPointerIsNULL( dataFromStandradInput, \"Reading from standard input failed\" );\n    	}\n\n    	// Check that the required amount \
+of command line arguments was given\n    	if ( argc < NUMBER_OF_ARGUMENTS_REQUIRED_FROM_COMMAND_LINE )\n    	{\n    		// There are not enough command line \
+arguments\n\n    		// Print error message to the user\n    		WriteToStandardError( \"Not enough command line arguments given\" );\n\n    		\
+// Return the vlaue 1 to indicate that an error occurred\n    		return ( 1 );\n    	}\n\n    }\n    catch ( const Exception& exception )\n    {\n    	\
+exception.What();\n    }\n\n    // The operation succeeded return 0\n    return ( 0 );\n}" > $@.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to store the template into the shell file\n"
+			return 1
+		fi
+	
+	subl $@.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to open the shell file with sublime\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias newshellprog='CreateNewShellFileWithBasicTemplateInside'

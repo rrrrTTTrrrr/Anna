@@ -1,0 +1,599 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#								   3D party source code - this script is used to test that all the required applications exist, and if not add them
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# This variable will store the file full path
+FILE_FULL_PATH_13="BASH_DIRECTORY_FULL_PATH/Libraries/.bash_3DpartyExecutablesLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                    3D PARTY SOURCE CODE ENVIRONMENT	                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+################################################################################################################################################################################
+#                                                                                	APT-GET 	                                                                               #
+################################################################################################################################################################################
+
+
+############################################################################   GENERAL KNOWLEDGE   #############################################################################
+
+
+# The following methods are used in ubuntu Linux :
+#
+#	1) add-apt-repository - adds a PPA to your list of sources, so that Ubuntu knows to look for updates from that PPA as well as from the official Ubuntu sources. Usually
+#                         this is used to allow developers to provide updates more quickly than those in the official Ubuntu repositories
+#
+#	2) apt-get update - tells apt-get to update its database of what packages can be installed and where to install them from
+#
+#	3) apt-get install - causes apt-get to find the package in its database and download and install the indicated file
+#
+#	4) apt-get upgrade - is used to install the newest versions of all packages currently installed on the system from the sources enumerated in /etc/apt/sorces.list
+
+
+# "Authentication keys" are usually obtained from the maintainer of the software repository. The maintainer will often place a copy of the authentication key on a public
+# key server. The key can then be retrieved using the command. Apt-get package management uses public key cryptography to authenticate downloaded packages. apt-key is a 
+# program that is used to manage a keyring of gpg keys for secure apt. The keyring is kept in the file "/etc/apt/trusted.gpg". apt-key can be used to show the keys in 
+# the keyring, and to add or remove a key. Each time another apt repository is added to /etc/apt/sources.list, a key must also be given to apt, otherwise it won't trust
+# it. Once a key was obtained, it can be validated by checking the key's fingerprint and then signing this public key with the private key. The key then be added to 
+# apt's keyring with : 
+# 
+# 		apt-key add < key >
+
+
+####################################################################   DOES 3D PARTY EXECUTABLES EXIST???   ####################################################################
+
+
+function Does3DpartyExecutableExist {  # Use to check if the required 3D party executable exist or not, return 0 if does not exist and 1 if exist
+# $@ - application name
+
+	# Check the length of the string returned from invoking the apt-cache with the given string, if it 0 then apt-cache did not find anything
+	if [ -x "$(command -v $@)" ]
+	then
+
+		# The 3D party executable was found, return true
+		return 1
+
+	fi
+
+	# The 3D party executable was not found, return false
+	return 0
+}
+alias doesexist3ddvdf='Does3DpartyExecutableExist'
+
+
+#################################################################   INSTALL ALL 3D PARTY EXECUTABLES FUNCTION   ################################################################
+
+
+function InstallOrUpdate_3DpartyExecutables  {  # This function will installed all the required 3D party executables
+
+	lastMonth3DexecutablesWereUpdated=13
+	currentMonth=$(date +'%m') 
+
+	if [ -e $USAGE_DATA_DIRECTORY_FULL_PATH/System.LastMonth3DexecutablesWereUpdated ]
+	then
+
+		lastMonth3DexecutablesWereUpdated=$(cat $USAGE_DATA_DIRECTORY_FULL_PATH/System.LastMonth3DexecutablesWereUpdated)
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to create a file with the last month the 3D executables were updated in bash\n"
+				return 1
+			fi
+
+	fi
+
+	if [[ $lastMonth3DexecutablesWereUpdated != $currentMonth ]]
+	then
+
+		printf $currentMonth > $USAGE_DATA_DIRECTORY_FULL_PATH/System.LastMonth3DexecutablesWereUpdated
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to create a file with the last month the 3D executables were updated in bash\n"
+				return 1
+			fi
+
+		# Add the 'ubuntu-toolchain-r/test' repository if needed
+		AddUbuntuToolchainRepository
+
+		# Update all the addresses of the Ubuntu repositories
+		sudo apt-get update
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update apt-get ppa database\n"
+				return 1
+			fi
+
+		InstallOrUpdate_Sublime3
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update Sublime3\n"
+				return 1
+			fi
+
+		InstallOrUpdate_Valgrind
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update Valgrind\n"
+				return 1
+			fi
+
+		InstallOrUpdate_Apache2
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update Apache2\n"
+				return 1
+			fi
+
+		InstallOrUpdate_Xclip
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update Xclip\n"
+				return 1
+			fi
+
+		InstallOrUpdate_GCC9
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update gcc\n"
+				return 1
+			fi
+
+		InstallOrUpdate_GPP9
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update g++\n"
+				return 1
+			fi
+
+		InstallOrUpdate_GDB
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update gdb\n"
+				return 1
+			fi
+
+		InstallOrUpdate_CLAMAV
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update clamav\n"
+				return 1
+			fi
+
+		InstallOrUpdate_CLAMAV_DAEMON
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update clamav daemon\n"
+				return 1
+			fi
+
+		# Fun :
+		InstallOrUpdate_Cowsay
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to update Cowsay\n"
+				return 1
+			fi
+
+	fi
+
+	return 0
+}
+alias pappp='InstallOrUpdate_3DpartyExecutables'
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                 INSTALL ALL THE 3D PARTY EXECUTABLES FUNCTIONS                                                          ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                 GNU Compiler set                                                                             #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_GCC9 {  # Check if gcc-9 is currently installed on the system and if not install it
+
+	sudo apt-get install gcc-9
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update gcc\n"
+			return 1
+		fi
+
+	return 0
+}
+alias bghfnmyhjmjkkgggggkkkk='InstallOrUpdate_GCC9'
+
+
+function InstallOrUpdate_GPP9 {  # Check if g++-9.1 is currently installed on the system and if not install it
+# This is the ppa - add-apt-repository ppa:ubuntu-toolchain-r/test
+
+	sudo apt-get install g++-9
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update g++8\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias bghfnmyhjmjkkgggggkkkk='InstallOrUpdate_GPP9'
+
+
+function InstallOrUpdate_GDB {  # Install latest version of GDB
+
+	sudo apt-get install gdb
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update GDB\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias bghfnmyhjmjkkgDDDDDDggggdffvwwwcDSFDSbkkkk='InstallOrUpdate_GDB'
+
+
+
+################################################################################################################################################################################
+#                                                                                      EDITOR                                                                                  #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_Sublime3 {  # Check if 'sublime' is currently installed on the system and if not install it
+	#wget -qO - https://download.sublimetext.com/sublimehq-pub.gpg | sudo apt-key add -
+	#echo "deb https://download.sublimetext.com/ apt/stable/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
+
+	sudo apt-get install sublime-text
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias bghfnmyhjmjkkkkkk='InstallOrUpdate_Sublime3'
+
+
+function DisplaySublimeLicense {  # Use this function to display the license for sublime text editor
+
+	printf "\n\n\n"
+	echo "----- BEGIN LICENSE -----"
+	printf "David Amar\n"
+	printf "Single User License\n"
+	printf "EA7E-1186424\n"
+	printf "D4A829B8 45E0666F 4752CE04 D3FF2923\n"
+	printf "96EACEDD E45BE0C5 D9D914F6 F52878F4\n"
+	printf "E8F7EB59 8F602968 364E6FE1 AAD5C78B\n"
+	printf "D5AA01B4 E80B8BE4 2D1C585B ECD73708\n"
+	printf "2C457E74 A03F1044 36E9D98F 753CBFC0\n"
+	printf "40CB4190 49CC3EDE AD07AF14 14EDEBA7\n"
+	printf "917F74B0 0BDFEF06 CE5315B9 3C033149\n"
+	printf "0397BEAA EB106C4A BCCFD056 5C6FF573\n"
+	echo "------ END LICENSE ------"
+	printf "\n\n\n"
+
+	printf "NOTE - copy the license as it is with the 'BEGIN LICENSE' and 'END LICENSE' parts\n\n\n"
+
+}
+alias sublic='DisplaySublimeLicense'
+
+
+
+################################################################################################################################################################################
+#                                                                                   DEBUG TOOL - VALGRIND                                                                      #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_Valgrind {  # Check if 'valgrind' are currently installed on the system and if not install it
+
+	sudo apt-get install valgrind
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update valgrind\n"
+			return 1
+		fi
+
+	
+	return 0
+}
+alias bghfnmyeeehjmjkkgggggkkkk='InstallOrUpdate_Valgrind'
+
+
+########################################################################################   OVERVIEW    #########################################################################
+
+
+# Valgrind is an instrumentation framework for building dynamic analysis tools. There are Valgrind tools that can automatically detect many memory management 
+# and threading bugs, and profile programs in detail
+
+
+########################################################################################   CALLGRIND    ########################################################################
+
+
+# Display performance statistics!!
+#
+# To use:
+# 
+# 	valgrind --dsymutil=yes --tool=callgrind
+# 
+# it will produce a callgrind.out.PID ( PID - process ID of the program	that ran ). To analyze this file use the tool :
+# 
+# 	callgrind_annotate callgrind.out.PID
+# 
+# which will tell which functions used the most instructions to run, sorted from highest to lowest. From this the functions that need optimization can be 
+# obtained. Now to enter further in give also the source file :
+# 
+# 	callgrind_annotate callgrind.out.PID source/file/path
+# 
+# And the number of instructions each line caused will be displayed. This way the most expensive lines can be noticed and dealt with
+# 
+# To create the output file in a different destination use :
+# 
+# 		--callgrind-out-file=file/path/
+
+
+###################################################################################   CACHEGRIND   ############################################################################
+
+
+# Analyzing memory access!!
+#
+# To use:
+# 
+# 	valgrind --tool=cachegrind test/file/path
+# 
+# It will produce a cachegrind.out.PID ( PID - process ID of the program that ran ). To analyze this file use the tool :
+# 
+# 	cg_annotate callgrind.out.PID
+# 
+# Use the show option to get a smaller output :
+# 
+# 	cg_annotate --show=Dr,Dw callgrind.out.PID
+# 
+# 	Dw - memory write, Dr - memory read
+
+
+
+################################################################################################################################################################################
+#                                                          X11 SERVER ( GRAPHICS DRIVER ) AND CLIENT WITH DEVELOPMENT KIT PLUS SANDBOX                                         #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_X11_Package {  # The function will install the program 'apache2' if it does not exist, otherwise it will try to update it
+
+	sudo apt-get install apache2
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update X11 package\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias bgasxffhfnmyhdddjmjkkgggggkkkk='InstallOrUpdate_X11_Package'
+
+
+
+
+################################################################################################################################################################################
+#                                                                                     HTTP SERVER                                                                              #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_Apache2 {  # Check if 'apache2' are currently installed on the system and if not install it
+
+	sudo apt-get install apache2
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update apache2\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias bghfnmyhdddjmjkkgggggkkkk='InstallOrUpdate_Apache2'
+
+
+
+################################################################################################################################################################################
+#                                                                                          XCLIP                                                                               #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_Xclip {  # Check if 'xclip' is currently installed on the system and if not install it
+
+	sudo apt install xclip
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update xclip\n"
+			return 1
+		fi
+				
+	return 0
+}
+alias bghfnmfffffyvvvvvvvhjmjkkkkkk='InstallOrUpdate_Xclip'
+
+
+function CopyCurrentLineFromCommandPrompt {  # Use this function to copy the current line from the command prompt
+# $@ - the line to copy
+
+	printf $@ | xclip -selection clipboard
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "failed to copy the line\n"
+			return 1
+		fi	
+	
+	return 0
+}
+alias copyy='CopyCurrentLineFromCommandPrompt'
+
+# Use this alias to copy the output of a another command
+alias copyout='xclip -selection clipboard'
+
+
+
+################################################################################################################################################################################
+#                                                                                   CLAMAV                                                                                     #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_CLAMAV {  # Install clamav on the system
+
+	sudo apt-get install clamav
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update clamav\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias bghfnmywwwhjmjkkgggggkkkk='InstallOrUpdate_CLAMAV'
+
+
+# Installing clamav via the command "apt-get install clamav" doesn't actually install the clamav daemon. It only installs the freshclam daemon. The 
+# first time clamd runs, it'll create /etc/clamav/clamd.conf. Also the clamav package does install clamscan, which can be invoked manually to scan 
+# specific files/directories. However, by default, nothing will be scanned automatically. clamav-daemon allows scans to be triggered remotely, but 
+# even that doesn't schedule scans or provide realtime protection!
+
+
+function InstallOrUpdate_CLAMAV_DAEMON {  # Install clamav daemon on the system
+
+	sudo apt-get install clamav-daemon
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update clamav daemon\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias bghfnmywwwhtttttttjmjkkgggggkkkk='InstallOrUpdate_CLAMAV_DAEMON'
+
+
+################################################################################   UNINSTALL   #################################################################################
+
+
+function Uninstall_CLAMAV_IfExist {  # Uninstall clamav from the system. If the clamav executable is not already registered in the system the function does nothing
+
+	Does3DpartyExecutableExist clamscan
+		if [ $? -eq 1 ]
+		then
+
+			sudo apt-get remove clamav
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to uninstall clamav\n"
+					return 1
+				fi
+
+			sudo apt-get remove freshclam
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to uninstall freshclam\n"
+					return 1
+				fi
+
+			sudo apt-get clean
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to clean\n"
+					return 1
+				fi
+
+			sudo apt-get autoremove
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to automatic remove\n"
+					return 1
+				fi
+
+		fi
+	
+	return 0
+}
+alias ttttttgfvfdf='Uninstall_CLAMAV_IfExist'
+
+
+
+################################################################################################################################################################################
+#                                                                                          FUN                                                                                 #
+################################################################################################################################################################################
+
+
+
+function InstallOrUpdate_Cowsay {  # Check if 'cowsay' is currently installed on the system and if not install it
+
+	sudo apt install cowsay
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_13 $FUNCNAME "Failed to install or update cowsay\n"
+			return 1
+		fi
+				
+	return 0
+}
+alias bghfnmfffffyhjmjkkkkkk='Install_Cowsay'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,792 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+#																	LAMP stack - Linux Apache MySQL PHP
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_11="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_WebServerSideLibrary"
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+###      																								  												      ###
+###      							                                            APACHE2 SERVER                  							                  ###
+###      																								  													  ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+
+
+
+#################################################################################################################################################################
+#                                                                         Installation and Configuration                                                        #
+#################################################################################################################################################################
+
+
+
+function InstallApacheServerAndClient {  #Use to install the latest version of apache server and client
+
+	sudo apt-get install apache2
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing apache server\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installapache='InstallApacheServerAndClient'
+
+
+
+#################################################################################################################################################################
+#                                                                                     Usage                                                                     #
+#################################################################################################################################################################
+
+
+
+#After installation of the apache server, to check if the installation succeeded open a browser and type - localhost -2
+#the same can be done using the IP address - 127.0.0.1 - which is a special-purpose IPv4 address called localhost or 
+#loopback address. All computers use this address as their own but it doesn't let them communicate with other devices 
+#like a real IP address does
+
+#To check which modules are enabled use - apache2ctl -M
+
+#In order to see all the active internet connections use the command - netstat -a OR -an (to show the IP address instead of a name)
+
+
+function StartApacheServer {  #Use to start apache server service
+
+	sudo /etc/init.d/apache2 start
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed starting apache server\n"
+			return 1
+		fi
+
+	return 0
+}
+alias startapache='StartApacheServer'
+
+
+function StopApacheServer {  #Use to stop apache server service
+
+	sudo /etc/init.d/apache2 stop
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed stoping apache server\n"
+			return 1
+		fi
+
+	return 0
+}
+alias stopapache='StopApacheServer'
+
+
+function RestartApacheServer {  #Use to restart apache server service
+
+	sudo /etc/init.d/apache2 restart
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed restarting apache server\n"
+			return 1
+		fi
+
+	return 0
+}
+alias restartapache='RestartApacheServer'
+
+
+function ReadApacheServerErrorLog {  #Use to display the apache server error log
+
+	subl /var/log/apache2/error.log
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to display the apache server error log file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias elog='ReadApacheServerErrorLog'
+
+
+function EditApacheServerConfigurationFile {  #Use to edit the apache server error configuration file
+
+	subl /etc/apache2/apache2.conf
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to open the apache server configuration file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias apcconf='EditApacheServerConfigurationFile'
+
+
+
+#################################################################################################################################################################
+#                                                                                   General                                                                     #
+#################################################################################################################################################################
+
+
+
+#To enable a module on apache, go the directory mods-availabe and check if he exist. If it does just link the file to the mods-enabled :
+#
+#		sudo ln -s /mods-available/module.suffix
+#
+#To list all the current loaded modules use  ->  apachectl -M
+
+#htaccess :
+#
+#Most hosting companies will host multiple domains on one server, and all the domains use the same Web server software installed on that server. This presents a 
+#problem. What if two Webmasters using the same server need different Web server configurations? Apache addressed this by using .htaccess files. Apache, like any 
+#other software, has configuration files. Your host edits these "global" configuration files to serve as a default for all of the sites hosted on the server. The 
+#.htaccess file acts as a "local" configuration file so that individual Websites can customize the configuration to suit their needs
+#
+#The .htaccess file is an ordinary text file. This file will contain the configuration statements ( commands ) to customize the Apache Web server software for 
+#your Website
+
+#To activate server side includes (SSI) add the keyword Includes to the required directory in the apache2.conf file :
+#
+#	<Directory /var/www/>
+# 	Options Indexes FollowSymLinks Includes
+# 	AllowOverride None
+# 	Require all granted
+# 	</Directory>
+#
+#Now there are 2 options :
+#
+#1. Add to the htaccess file the following code :
+#		AddType text/html .shtml
+#		AddOutputFilter INCLUDES .shtml
+#
+#And then suffix the files with shtml instead of html
+#
+#2. The second one is to use the XBitHack, add to the directory :
+#
+#	<Directory /var/www/>
+# 	Options Indexes FollowSymLinks Includes
+# 	AllowOverride None
+# 	Require all granted
+#	XBitHack on
+# 	</Directory>
+
+
+
+#################################################################################################################################################################
+#                                                                        COMMON GATEWAY INTERFACE ( CGI )                                                       #
+#################################################################################################################################################################
+
+
+
+#What is Common Gateway Interface ( CGI ) on web servers :
+#
+#A web server, e.g. Apache, just sends back static content is response to a client request for content. For example a request for 
+#index.html typically causes the server to open the file and return the content of the file wrapped with the relevant http components.
+#Basically CGI is a technique for generating such web pages dynamically via other applications which are run by the web server on 
+#an as-needed basis
+#
+#The directory cgi-bin is typically used to house the scripts being run
+
+#CGI configuration :
+#
+# 1. ScriptAlias - this directive tells apache that a particular directory is set aside for CGI programs. Apache will assume that every
+#	 in this directory is a CGI program, and will attempt to execute it, when that particular resource is requested be a client
+# 2. Explicitly using options to permit CGI execution - the Options directive can be used to explicitly notify the CGI execution was
+#    permitted in a particular directory :
+#
+#		<Directory /some/directory/>
+#			Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+#			AddHandler cgi-scripts .exe
+#		</Directory>
+
+#Writing a CGI program :
+#
+#There are two main differences between "regular" programming and CGI programming. First, all output from the CGI program must be 
+#preceded by a MIME-type header. This is HTTP header that tells the client what sort of content it is receiving. Secondly, the output
+#needs to be in HTML, or some other format that a browser will be able to display
+
+#Each program can communicate with the outside world with 4 things :
+#
+# 1. Command line arguments passed as argc and argv
+# 2. Environment variables
+# 3. Standard Input
+# 4. Standard output
+#
+#In CGI the command line arguments are not used!
+#
+#Environment variables :
+#
+#The CGI script runs inside the the "bubble" of the server, environment variables are used to pass data between the outside world and the current
+#process. They are useful things like your path ( where the computer searches for the actual file implementing a command when you type it ), your 
+#username, your terminal type, and so on. During the CGI transaction, the server and the browser also set environment variables, so that they can 
+#communicate with one another. These are things like the browser type ( Netscape, IE, Lynx ), the server type ( Apache, IIS, WebSite ), the name 
+#of the CGI program that is being run, and so on. These variables are available to the CGI programmer, and are half of the story of the client-server 
+#communication
+#
+#List of possible environment variables :
+#
+# 1. HTTP_HOST
+# 2. HTTP_USER_AGENT - the type of web browser the client has
+# 3. HTTP_ACCEPT - the type of files recognized ( text/html etc )
+# 4. HTTP_ACCEPT_LANGUAGE - understood languages
+# 5. HTTP_ACCEPT_ENCODING - understood encoding
+# 6. HTTP_CONNECTION - wheter the connection should stay alive
+# 7. HTTP_UPGRADE_INSECURE_REQUESTS
+# 8. PATH
+# 9. SERVER_SIGNATURE
+# 10. SERVER_SOFTWARE
+# 11. SERVER_NAME
+# 12. SERVER_ADDR
+# 13. SERVER_PORT
+# 14. REMOTE_ADDR
+# 15. DOCUMENT_ROOT
+# 16. REQUEST_SCHEME
+# 17. CONTEXT_PREFIX
+# 18. CONTEXT_DOCUMENT_ROOT
+# 19. SERVER_ADMIN
+# 20. SCRIPT_FILENAME
+# 21. REMOTE_PORT
+# 22. GATEWAY_INTERFACE
+# 23. SERVER_PROTOCOL
+# 24. REQUEST_METHOD
+# 25. QUERY_STRING
+# 26. REQUEST_URI
+# 27. SCRIPT_NAME
+#
+#Standard Input and Output :
+#
+#Other communication between the server and the client happens over standard input and output. In normal everyday context, STDIN means the keyboard, or 
+#a file that a program is given to act on, and STDOUT usually means the console or screen. When you POST a web form to a CGI program, the data in that 
+#form is bundled up into a special format and gets delivered to your CGI program over STDIN. The program then can process that data as though it was 
+#coming in from the keyboard, or from a file. The "special format" is very simple. A field name and its value are joined together with an equals ( = ) sign, 
+#and pairs of values are joined together with an ampersand ( & ). Inconvenient characters like spaces, ampersands, and equals signs, are converted into 
+#their hex equivalent so that they don't gum up the works. The whole data string might look something like :
+#
+#		name=Rich%20Bowen&city=Lexington&state=KY&sidekick=Squirrel%20Monkey
+#
+#You'll sometimes also see this type of string appended to a URL. When that is done, the server puts that string into the environment variable called 
+#QUERY_STRING. That's called a GET request. Your program is then responsible for splitting that string up into useful information
+
+
+
+#################################################################################################################################################################
+#                                                                                     HTML                                                                      #
+#################################################################################################################################################################
+
+
+
+function GoToHTMLdirectory {  #Use to move to the HTML directory for the apache server
+
+	GoToDirectoryAndDisplayContents /var/www/html/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gohtml='GoToHTMLdirectory'
+
+
+
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+###      																								  												      ###
+###      							                                                 MySQL                      							                  ###
+###      																								  													  ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+
+
+
+#################################################################################################################################################################
+#                                                                         Installation and Configuration                                                        #
+#################################################################################################################################################################
+
+
+
+function InstallMySQLserverAndClient {  #Use to install the latest version of MySQL server and client
+
+	sudo apt-get install mysql-server
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing MySQL\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installmysql='InstallMySQLserverAndClient'
+
+
+function UninstallMySQLserverAndClient {  #Use to uninstall the latest version of MySQL server and client
+
+	sudo apt-get remove --purge mysql-common* mysql-client* mysql-server*
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed uninstalling MySQL\n"
+			return 1
+		fi
+
+	return 0
+}
+alias uninstallmysql='UninstallMySQLserverAndClient'
+
+
+function GetMySQLversion {  #Use to get the version of MySQL server and client
+
+	apt-cache policy mysql-server
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed getting MySQL version\n"
+			return 1
+		fi
+
+	return 0
+}
+alias mysqlver='GetMySQLversion'
+
+
+function InstallMySQLandPHPlibrary {  #Use to install the library the connects MySQL and PHP
+
+	sudo apt-get install php7.0-mysql
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing MySQL and PHP\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installmysqlphp7='InstallMySQLandPHPlibrary'
+
+
+
+#################################################################################################################################################################
+#                                                                                     Usage                                                                     #
+#################################################################################################################################################################
+
+
+
+function AccessMySQLasRoot {  #Use to log in to MySQL as root user
+
+	OpenPasswordsFile
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	mysql -u root -p	
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to start MySQL\n"
+			return 1
+		fi
+
+	return 0
+}
+alias mysqlgo='AccessMySQLasRoot'
+
+
+function GetMySQLstatus {  #Use to get MySQL status
+
+	service mysql status
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to get MySQL status\n"
+			return 1
+		fi
+
+	return 0
+}
+alias mysqlstat='GetMySQLstatus'
+
+
+function StopMySQL {  #Use to stop MySQL service
+
+	service mysql stop
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to stop MySQL service\n"
+			return 1
+		fi
+
+	return 0
+}
+alias stopmysql='StopMySQL'
+
+
+
+#################################################################################################################################################################
+#                                                                                   General                                                                     #
+#################################################################################################################################################################
+
+
+
+#AUTO_INCREMENT - the behavior is that if 5 records were added, and the fifth record is deleted, the next number will be 6 and not 5 again. If the lowest unused
+#key values is needed, then it must be done manually. However, this is NOT a recommended practice. Take a step back and ask "why i need to recycle key values?"
+#Do unsinged int not provide a large enough key space?
+
+#To see the columns description of a table use  ->  DESCRIBE TableName
+
+
+
+#################################################################################################################################################################
+#                                                                                   Syntax                                                                      #
+#################################################################################################################################################################
+
+
+
+#Create new database -> CREATE DATABASE databaseName;
+#To use a specific database use  ->  USE databaseName;
+#To see all tbles inside a database use  ->  SHOW TABLES 
+
+#Create new table :
+#
+#syntax example :
+#
+#	CREATE TABLE MyGuests (
+#	id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+#	firstname VARCHAR(30) NOT NULL,
+#	lastname VARCHAR(30) NOT NULL,
+#	email VARCHAR(50),
+#	reg_date TIMESTAMP
+#	) 
+#
+#After the data type, you can specify other optional attributes for each column:
+#
+# NOT NULL - Each row must contain a value for that column, null values are not allowed
+# DEFAULT value - Set a default value that is added when no other value is passed
+# UNSIGNED - Used for number types, limits the stored data to positive numbers and zero
+# AUTO INCREMENT - MySQL automatically increases the value of the field by 1 each time a new record is added
+# PRIMARY KEY - Used to uniquely identify the rows in a table. The column with PRIMARY KEY setting is often an ID number, and is often used with AUTO_INCREMENT
+#
+#Each table should have a primary key column. Its value must be unique for each record in the table
+
+
+
+#################################################################################################################################################################
+#                                                                                   InnoDB                                                                      #
+#################################################################################################################################################################
+
+
+
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+###      																								  												      ###
+###      							                                      HYPERTEXT PREPROCESSOR ( PHP )          							                  ###
+###      																								  													  ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+
+
+#################################################################################################################################################################
+#                                                                         Installation and Configuration                                                        #
+#################################################################################################################################################################
+
+
+
+function InstallPHP {  #Use to install the latest version of PHP
+
+	sudo apt-get install php
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing PHP\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installphp='InstallPHP'
+
+
+function InstallPHPrelatedApacheLibrary {  #Use to install the library that connects betwen PHP and apache
+
+	sudo apt-get install libapache2-mod-php
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing library that connects betwen PHP and apache\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installphplib='InstallPHPrelatedApacheLibrary'
+
+
+function InstallOpcacheAndAPCuForPHP {  #Use to install apcache and apcu for PHP
+#PHP 7 ships with a built-in opcode cacher for caching and optimizing PHP intermediate code, it has the name  apcache' and is available in the package 
+#php7.0 apcache. It is strongly recommended to have an Opcache installed to speed up your PHP page. Besides apcache, I will install APCu which is a 
+#compatibility wrapper for apcache to provide the functions of the APC cache, an often used caching system in PHP 5.x versions and many CMS systems 
+#still use it
+
+	sudo apt-get instalL php7.0 apcache php-apcu
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing apcache and apcu for PHP\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installopandapcu='InstallOpcacheAndAPCuForPHP'
+
+
+function InstallPHPmyAdmin {  #Use to install the latest version of PHPmyAdmin
+
+	sudo apt-get install phpmyadmin
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed installing PHPmyAdmin\n"
+			return 1
+		fi
+
+	return 0
+}
+alias installphpmyadmin='InstallPHPmyAdmin'
+
+
+
+#################################################################################################################################################################
+#                                                                                   General                                                                     #
+#################################################################################################################################################################
+
+
+
+#If a file is only added to other html file, and does not stand by it's own, the suffix should be  ->  file.inc
+
+#The keyword var was used to decalre variables in a class in PHP 4, but now it is the same as declaring a data member as public
+
+#Does every PHP code snippet inside the <?php> tag have its own variable scope?
+#
+#No, they don't. Separate <?php ?> tags share the same variable scope. You can access any variable declared from any scope :
+#
+#		<?php $foo = 4; ?>
+#		<?php echo $foo; /* will echo 4 */ ?>
+#
+#The only scoping notion in PHP exists for functions or methods. To use a global variable in a function or a method, you must use the 
+#$GLOBALS array, or a global $theVariableINeed; declaration inside your function
+
+
+
+#################################################################################################################################################################
+#                                                                             Cookies and Sessions                                                              #
+#################################################################################################################################################################
+
+
+
+#Cookie : 
+#
+#PHP transparently supports HTTP cookies. Cookies are a mechanism for storing data in the remote browser and thus tracking or 
+#identifying return users. HTTP is a stateless protocol, each call to the server is independent of the other, with cookies
+#the HTTP gets a state. You can set cookies using the setcookie() or setrawcookie() function. Cookies are part of the HTTP 
+#header, so setcookie() must be called before any output is sent to the browser. This is the same limitation that header() has.
+#Any cookies sent to server from the client will automatically be included into a $_COOKIE auto-global array
+
+#Session : 
+#
+#Use when data is needed all across the server
+#
+#Support in PHP consists of a way to preserve certain data across subsequent accesses. This enables you to build more 
+#customized applications and increase the appeal of your web site
+#
+#Sessions are a simple way to store data for individual users against a unique session ID. This can be used to persist state information
+#between page requests. Session IDs are normally sent to the browser via session cookies and the ID is used to retrieve existing session 
+#data. The absence of an ID or session cookie lets PHP know to create a new session, and generate a new session ID.
+#
+#Sessions follow a simple workflow. When a session is started, PHP will either retrieve an existing session using the ID passed 
+#( usually from a session cookie ) or if no session is passed it will create a new session. PHP will populate the $_SESSION superglobal 
+#with any session data after the session has started. When PHP shuts down, it will automatically take the contents of the $_SESSION 
+#superglobal, serialize it, and send it for storage using the session save handler
+#
+#By default, PHP uses the internal files save handler which is set by session.save_handler. This saves session data on the server at 
+#the location specified by the session.save_path configuration directive
+#
+#Sessions can be started manually using the start() function. If the session.auto_start directive is set to 1, a session will 
+#automatically start on request startup
+#
+#Sessions normally shutdown automatically when PHP is finished executing a script, but can be manually shutdown using the 
+#write_close() function
+
+
+
+#################################################################################################################################################################
+#                                                                                   Syntax                                                                      #
+#################################################################################################################################################################
+
+
+
+#The include or require statements take all the text that exists in the specified file and copies it into the file that uses the statements. The
+#include and required are identical, except upon failure :
+# 1. require will produce a fatal error ( E_COMPILE_ERROR ) and stop the script
+# 2. include will only produce a warning ( E_WARNING ) and the script will continue
+#
+#Furthermore, if the file should be added once use  ->  include_once OR required_once
+
+#$_GET - an associative array of variables passed to the current script via the URL parameters
+
+#$_POST - an associative array of variables passed to the current script via the HTTP POST method
+
+
+
+#################################################################################################################################################################
+#                                                                               Object oriented                                                                 #
+#################################################################################################################################################################
+
+
+
+#Methods declared withput any explicit visibility keyword are defined as public
+
+#The static keyword can be used to make a method accesible without he need of an actual instance
+
+
+
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+###      																								  												      ###
+###      							                                                 C++				          							                  ###
+###      																								  													  ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+
+
+
+#To run a C++ code do the following :
+#
+# 1. Compile the C++ and give the output executable the suffix .cgi
+# 2. Move the executable to the cgi-bin directory on the web server
+
+#The C++ code can interact with server using the standard input and output, as well as with environment variables. The data from the
+#GET and POST method of HTTTP can be accessed through :
+#
+#QUERY_STRING - for the data passed by the URI ( GET )
+#Standard input - for the data passed has POST header ( the length of the waiting data can be gained by CONTENT_LENGTH )
+
+
+
+
+#################################################################################################################################################################
+#################################################################################################################################################################
+###      																								  												      ###
+###      							                                      SERVER SIDE FUNCTIONALITY             							                  ###
+###      																								  													  ###
+#################################################################################################################################################################
+#################################################################################################################################################################
+
+
+
+
+function CopyLatestVersionOfValyouationToApacheServer {  #Copy the latest version of the web application Valyouation to the apache server
+
+	if [ "$(ls -A /var/www/html/)" ]
+	then
+		sudo rm -r /var/www/html/*
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to remove all files from apache www directory\n"
+				return 1
+			fi
+	fi
+
+	sudo cp -r $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/* /var/www/html/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to copy the latest version of Valyouation to apache www directory\n"
+			return 1
+		fi
+
+	return 0
+}
+alias vtow='CopyLatestVersionOfValyouationToApacheServer'
+
+
+function CopyLatestVersionOfValyouationToApacheServerAndTestItWithFireFox {  #Copy the latest version of the web application Valyouation to the apache server and test it using firefox
+
+	CopyLatestVersionOfValyouationToApacheServer
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	firefox /var/www/html/index.html & disown
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to test the web application using firefox\n"
+			return 1
+		fi
+
+	return 0
+}
+alias go='CopyLatestVersionOfValyouationToApacheServerAndTestItWithFireFox'
+
+
+function WebTest {  #Use to test something
+
+	if [ -d $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/Test/ ]
+	then
+		rm -r $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/Test/*
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to remove all files from apache www directory\n"
+				return 1
+			fi
+	else
+		mkdir $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/Test/
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the test directory\n"
+				return 1
+			fi
+
+	fi
+
+	printf "<!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n</head>\n<body>\n\n</body>\n\
+	        </html>" > $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/Test/TestHTML.html
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to create the test file for HTML\n"
+			return 1
+		fi
+
+	printf "" > $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/Test/TestJS.js
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to create the test file for JavaScript\n"
+			return 1
+		fi
+
+	subl $LAST_VERSION_VALYOUATION_DIRECTORY_FULL_PATH/WebApplication/Test/*
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to open web test files using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias tweb='WebTest'

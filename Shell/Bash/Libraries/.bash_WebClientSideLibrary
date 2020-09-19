@@ -1,0 +1,576 @@
+#!/bin/bash
+
+
+
+#																	HCJ stack - HTML CSS JavaScript
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_12="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_WebClientSideLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                 HTML        			                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                   General                                                                                    #
+################################################################################################################################################################################
+
+
+
+# The required attribute of the input html tag is boolean. When present, it specifies that an input field must be filled out before submitting the form
+
+
+
+################################################################################################################################################################################
+#                                                                         			 Usage                                                                                     #
+################################################################################################################################################################################
+
+
+
+# Use name attributes for form controls ( such as <input> and <select> ), as that's the identifier used in the POST or GET call that happens on form submission.
+# Use id attributes whenever you need to address a particular HTML element with CSS, JavaScript or a fragment identifier. It's possible to look up elements by 
+# name, too, but it's simpler and more reliable to look them up by ID.
+
+# The action attribute of the form tag - defines where the data gets sent. It's value must be a valid URL. If this attribute isn't provided, the data will be
+# sent to the URL of the page containing the form
+
+
+
+################################################################################################################################################################################
+#                                                                         	  MOST IMPORTANT TAGS                                                                              #
+################################################################################################################################################################################
+
+
+
+# Headings - <h1> until <h6>
+# Paragraph - <p>
+# Italic - <i>
+# Bold - <b>
+# Anchor - <a>
+# Unordered list & list item - <ul> & <li>
+# Block quote - <blockquote>
+# Horizontal rule - <hr>
+# image - <img>
+# Division - <div>
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                 CSS    			                                                                     ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                         Installation and Configuration                                                                       #
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                              JavaScript    			                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                   General                                                                                    #
+################################################################################################################################################################################
+
+
+
+# The HTML Document Object Model ( DOM ) :
+# 
+# When a web page is loaded, the browser creates a document object model of the page. The HTML DOM is constructed as a tree of objects :
+# 
+# 																					Document
+# 																					   |
+# 																				Root element <html>
+# 																					   |
+# 															----------------------------------------------------------
+# 															|							                             |
+# 													  Element <head>                                           Element <body>
+# 													    	|							                             |
+# 													  Element <title>          				     -------------------------------------
+# 																								 |                                   |
+# 																						    Element <a>                         Element <h1>
+# 																								 |                                   |
+# 																					     ------------------                       Text "My header"
+# 																					   	 |                |
+# 																				  Attribute 'href'   Text "My link"
+# 
+# With the HTML DOM, JavaScript can access and change all the elements of an HTML document
+
+# HTML DOM properties :
+#  1. textContent - sets or returns the textual content of the specified node, and all its descendants. If it is used to set, any child 
+#     nodes are removed and replaced by a single text node containing the specified string
+#  2. innerText - is a property that represents the "rendered" text content of a node and its descendants. As a getter, it approximates the text the user 
+#     would get if they highlighted the contents of the element with the cursor and then copied to the clipboard
+#  3. innerHTML - sets or gets the HTML syntax describing the element's descendants
+#  4. style - use to get or set the style properties of the element
+
+# JavaScript is very good for validating data on the client side, and thus prevent from sending to the server bad data. But keep in mind that you should
+# not rely only on javascript and check it also at the server side, because javascript can be easily disabled
+
+# Parameter Rules :
+# 
+#  1. JavaScript function definitions do not specify data types for parameters
+#  2. JavaScript functions do not perform type checking on the passed arguments
+#  3. JavaScript functions do not check the number of arguments received
+
+# The identity (===) operator behaves identically to the equality (==) operator except no type conversion is done, and the types must be the same to be 
+# considered equal
+
+# Variable initialization :
+# 
+# 	var a;
+# 	var a = null;
+# 
+# The first example doesn't assign anything to the variable, so it implicitly refers to the undefined value (see 10.5 in the spec for the details). It 
+# is commonly used when declaring variables for later use. There is no need to explicitly assign anything to them before necessary
+# 
+# The second example is explicitly assigned null (which is actually of type null, but due to a quirk of the JavaScript specification, claims to have 
+# type "object"). It is commonly used to clear a value already stored in an existing variable. It could be seen as more robust to use null when clearing 
+# the value since it is possible to overwrite undefined, and in that situation assiging undefined would result in unexpected behaviour
+
+# Every thing done using javascript can be done by using the console on the web browser
+
+# Console commands :
+# 
+#  1. dir - displays an interactive list of the properties of the specified javascript object
+#  2. log - outputs a message to the web console
+
+
+
+################################################################################################################################################################################
+#                                                                     LOADING JAVASCRIPT WITHOUT BLOCKING                                                                      #
+################################################################################################################################################################################
+
+
+
+# Dynamically creating a <script> element and assigning its src attribute leads to a download that doesn’t block other downloads or page processes. When 
+# <script> tags are in the flow of an HTML document, the browser must stop rendering and wait for the script file to download and execute before continuing. 
+# Creating a new <script> tag via JavaScript avoids this issue because it’s out of the flow of the document, so the script file is downloaded and executed 
+# without waiting. The result -> dynamically loading JavaScript files allows your page to render faster and therefore improve perceived performance. the 
+# underlying technique is :
+# 
+# The basic approach to downloading JavaScript without blocking is quite straightforward :
+# 
+#  		var script = document.createElement( "script" );
+#  		script.type = "text/javascript";
+#  		script.src = "file.js";
+#  		document.body.appendChild( script );
+# 
+# This is about as easy as it gets, you just create a new DOM element, assign its properties and add it to the page. There are two things to note about 
+# this code. First, the download doesn’t actually begin until the script node is added to the document. This is different from dynamically creating an 
+# <img> element, for which assigning the src automatically begins the download even before the node is added to the document. The second thing to note is 
+# that you can add the script node either to the <head> or <body>; it really doesn’t matter. That’s all it takes to dynamically load a JavaScript file without 
+# blocking the page
+# 
+# Of course, you may also want to be notified when the JavaScript file is fully downloaded and executed, and that’s where things get a bit tricky. Most modern 
+# browsers ( Firefox, Safari, Opera, Chrome ) support a load event on <script> elements. This is an easy way to determine if the script is loaded :
+# 
+#  		//Firefox, Safari, Chrome, and Opera
+#  		var script = document.createElement("script");
+#  		script.type = "text/javascript";
+#  		script.src = "file.js";
+#  		script.onload = function(){
+#      		alert("Script is ready!");
+#  		};
+#  		document.body.appendChild(script);
+# 
+# You can wrap these two approaches pretty easily to create a cross-browser function to dynamically load JavaScript :
+# 
+#  		function loadScript(url, callback){
+# 
+#      		var script = document.createElement("script")
+#      		script.type = "text/javascript";
+# 
+# 		     if (script.readyState){  //IE
+#        		  script.onreadystatechange = function(){
+#              		if (script.readyState == "loaded" ||
+#                   		   script.readyState == "complete"){
+#                  		script.onreadystatechange = null;
+#                  		callback();
+#              		}
+#          		};
+#      		} else {  //Others
+#          		script.onload = function(){
+#              		callback();
+#          		};
+#      		}
+# 
+#      		script.src = url;
+#      		document.body.appendChild(script);
+#  		}
+# 
+# To use this, just pass in the URL to retrieve and a function to call once it’s loaded :
+# 
+#  		loadScript("http://yui.yahooapis.com/2.7.0/build/yahoo/yahoo-min.js",
+#      		function(){
+#          		YAHOO.namespace("mystuff");
+# 
+# 		     //more...
+#  		});
+# 
+# Loading scripts in this way prevents them from blocking the download of other resources on the page or preventing the display from rendering.
+# 
+# To best use the process :
+# 
+#  1. Create two JavaScript files. The first contains just the code necessary to load JavaScript dynamically, the second contains everything else 
+#     that’s necessary for the initial level of interactivity on the page
+#  2. Include the first JavaScript file with a <script> tag at the bottom of the page, just inside the </body>
+#  3. Create a second <script> tag that calls the function to load the second JavaScript file and contains any additional initialization code
+# 
+# The actual code on your page ends up looking like this:
+# 
+#  		<script type="text/javascript" src="http://your.cdn.com/first.js"></script>
+#  		<script type="text/javascript">
+#  		loadScript("http://your.cdn.com/second.js", function(){
+#      		//initialization code
+#  		});
+#  		</script>
+# 
+# The key to this whole technique is to have just two JavaScript files, so the second one contains everything that’s needed to initialize the page. 
+# What if your page requires more than two files? Then you should be concatenating your files together either at build time ( using something like 
+# Sprockets ) or at run time ( using something like mod_concat or a combo handler ). There should never be a time when your page requires more than 
+# these two JavaScript files to properly initialize. Each additional HTTP request has overhead, and then you’ll need to worry about sequencing the 
+# downloads so code is executed in the correct order. By having just two files, you eliminate a large point of concern over which file is downloaded 
+# and executed first as well as eliminating unnecessary HTTP requests
+
+
+
+################################################################################################################################################################################
+#                                                                     			    OBJECTS                                                                                    #
+################################################################################################################################################################################
+
+
+
+# To create an object a wrapper is used, syntax :
+# 
+# 		{ name1 : value1 , name2 : value2 ... }
+# 
+# Then to create an object wrap it with curly brackets, and set inside pairs of names and values seperated with colon
+
+# All public method must be declared as properties, not variables or functions, syntax :
+# 
+#  Use :
+# 
+# 		this.myFunction () {
+# 		}
+# 
+#  And not :
+# 
+# 		function myFunction() {
+# 		}
+
+
+
+################################################################################################################################################################################
+#                                                                                   Syntax                                                                                     #
+################################################################################################################################################################################
+
+
+
+# To add a javascript code to html use the tags  ->  <script> javascript code </script>
+# To use javascript code from another file use  ->  <script type="text/javascript" src="scriptPath.js"></script>
+# In the form tag with the attribute onsubmit, if the javascript code needs to validate the data and only send it if it is ok use -> onsubmit="return validate()"
+
+# To get a reference to an object use -> document.getElementById( elementId )
+# To get the value of a specific part of the element use -> document.getElementById( elementId ).elements[ "elementName" ].value
+
+# To store a regular expression into a variable -> var regex = /RegularExpression/;
+# And then to use it -> regex.test(  )
+
+
+
+################################################################################################################################################################################
+#                                                                         JAVASCRIPT MODULE PATTERN                                                                            #
+################################################################################################################################################################################
+
+
+
+# The Basics
+# 
+# Anonymous Closures
+# 
+# This is the fundamental construct that makes it all possible, and really is the single best feature of JavaScript. We’ll simply create an anonymous function, 
+# and execute it immediately. All of the code that runs inside the function lives in a closure, which provides privacy and state throughout the lifetime of our 
+# application
+# 
+#  		(function () {
+#  			// ... all vars and functions are in this scope only
+#  			// still maintains access to all globals
+#  		}());
+# 
+# Notice the () around the anonymous function. This is required by the language, since statements that begin with the token function are always considered to 
+# be function declarations. Including () creates a function expression instead
+# 
+# Global Import
+# 
+# JavaScript has a feature known as implied globals. Whenever a name is used, the interpreter walks the scope chain backwards looking for a var statement for 
+# that name. If none is found, that variable is assumed to be global. If it’s used in an assignment, the global is created if it doesn’t already exist. This 
+# means that using or creating global variables in an anonymous closure is easy. Unfortunately, this leads to hard-to-manage code, as it’s not obvious 
+# ( to humans ) which variables are global in a given file
+# 
+# Luckily, our anonymous function provides an easy alternative. By passing globals as parameters to our anonymous function, we import them into our code, which 
+# is both clearer and faster than implied globals. Here’s an example :
+# 
+#  		(function ($, YAHOO) {
+#  			// now have access to globals jQuery (as $) and YAHOO in this code
+#  		}(jQuery, YAHOO));
+# 
+#  Module Export
+# 
+# Sometimes you don’t just want to use globals, but you want to declare them. We can easily do this by exporting them, using the anonymous function’s return 
+# value. Doing so will complete the basic module pattern, so here’s a complete example :
+# 
+#  		var MODULE = (function () {
+#  			var my = {},
+#  				privateVariable = 1;
+# 
+#  			function privateMethod() {
+#  				// ...
+#  			}
+# 
+#  			my.moduleProperty = 1;
+#  			my.moduleMethod = function () {
+#  				// ...
+#  			};
+# 
+#  			return my;
+#  		}());
+# 
+# Notice that we’ve declared a global module named MODULE, with two public properties: a method named MODULE.moduleMethod and a variable named 
+# MODULE.moduleProperty. In addition, it maintains private internal state using the closure of the anonymous function. Also, we can easily import needed 
+# globals, using the pattern we learned above
+# 
+# Advanced Patterns
+# 
+# Augmentation
+# 
+# One limitation of the module pattern so far is that the entire module must be in one file. Anyone who has worked in a large code-base understands the 
+# value of splitting among multiple files. Luckily, we have a nice solution to augment modules. First, we import the module, then we add properties, then we 
+# export it. Here’s an example, augmenting our MODULE from above :
+# 
+#  		var MODULE = (function (my) {
+#  			my.anotherMethod = function () {
+#  				// added method...
+#  			};
+# 
+#  			return my;
+#  		}(MODULE));
+# 
+# We use the var keyword again for consistency, even though it’s not necessary. After this code has run, our module will have gained a new public method 
+# named MODULE.anotherMethod. This augmentation file will also maintain its own private internal state and imports
+# 
+# Loose Augmentation
+# 
+# While our example above requires our initial module creation to be first, and the augmentation to happen second, that isn’t always necessary. One of the 
+# best things a JavaScript application can do for performance is to load scripts asynchronously. We can create flexible multi-part modules that can load 
+# themselves in any order with loose augmentation. Each file should have the following structure :
+# 
+# 		var MODULE = (function (my) {
+# 			// add capabilities...
+# 
+# 			return my;
+# 		}(MODULE || {}));
+# 
+# In this pattern, the var statement is always necessary. Note that the import will create the module if it does not already exist. This means you can use 
+# a tool like LABjs and load all of your module files in parallel, without needing to block
+# 
+# Tight Augmentation
+# 
+# While loose augmentation is great, it does place some limitations on your module. Most importantly, you cannot override module properties safely. You 
+# also cannot use module properties from other files during initialization ( but you can at run-time after intialization ). Tight augmentation implies a 
+# set loading order, but allows overrides. Here is a simple example ( augmenting our original MODULE ) :
+# 
+#  		var MODULE = (function (my) {
+#  			var old_moduleMethod = my.moduleMethod;
+# 
+#  			my.moduleMethod = function () {
+#  				// method override, has access to old through old_moduleMethod...
+#  			};
+# 
+#  			return my;
+#  		}(MODULE));
+# 
+# Here we’ve overridden MODULE.moduleMethod, but maintain a reference to the original method, if needed
+# 
+# Cloning and Inheritance
+# 
+#  		var MODULE_TWO = (function (old) {
+#  			var my = {}, key;
+# 
+#  			for (key in old) {
+#  				if (old.hasOwnProperty(key)) {
+#  					my[key] = old[key];
+#  				}
+#  			}
+# 
+#  			var super_moduleMethod = old.moduleMethod;
+#  			my.moduleMethod = function () {
+#  				// override method on the clone, access to super through super_moduleMethod
+#  			};
+# 
+#  			return my;
+#  		}(MODULE));
+# 
+# This pattern is perhaps the least flexible option. It does allow some neat compositions, but that comes at the expense of flexibility. As I’ve written it, 
+# properties which are objects or functions will not be duplicated, they will exist as one object with two references. Changing one will change the other. 
+# This could be fixed for objects with a recursive cloning process, but probably cannot be fixed for functions, except perhaps with eval
+# 
+# Cross-File Private State
+# 
+# One severe limitation of splitting a module across multiple files is that each file maintains its own private state, and does not get access to the private 
+# state of the other files. This can be fixed. Here is an example of a loosely augmented module that will maintain private state across all augmentations :
+# 
+#  		var MODULE = (function (my) {
+#  			var _private = my._private = my._private || {},
+#  				_seal = my._seal = my._seal || function () {
+#  					delete my._private;
+#  					delete my._seal;
+#  					delete my._unseal;
+#  				},
+#  				_unseal = my._unseal = my._unseal || function () {
+#  					my._private = _private;
+#  					my._seal = _seal;
+#  					my._unseal = _unseal;
+#  				};
+# 
+#  			// permanent access to _private, _seal, and _unseal
+# 
+#  			return my;
+#  		}(MODULE || {}));
+# 
+# Any file can set properties on their local variable _private, and it will be immediately available to the others. Once this module has loaded completely, 
+# the application should call MODULE._seal(), which will prevent external access to the internal _private. If this module were to be augmented again, further 
+# in the application’s lifetime, one of the internal methods, in any file, can call _unseal() before loading the new file, and call _seal() again after it 
+# has been executed
+# 
+# Sub-modules
+# 
+# There are many good cases for creating sub-modules. It is just like creating regular modules :
+# 
+#  		MODULE.sub = (function () {
+#  			var my = {};
+#  			// ...
+# 
+#  			return my;
+#  		}());
+# 
+# Sub-modules have all the advanced capabilities of normal modules, including augmentation and private state
+
+
+
+################################################################################################################################################################################
+#                                                                    ASYNCHRONOUS MODULE DEFINITION ( AMD )                                                                    #
+################################################################################################################################################################################
+
+
+
+# Module purposes :
+# 
+# What are JavaScript modules? What is their purpose?
+# 
+# Definition - how to encapsulate a piece of code into a useful unit, and how to register its capability/export a value for the module
+# Dependency references - how to refer to other units of code
+# 
+# The web today :
+# 
+# How are pieces of JavaScript code defined today?
+# 
+#  1. Defined via an immediately executed factory function
+#  2. References to dependencies are done via global variable names that were loaded via an HTML script tag
+#  3. The dependencies are very weakly stated: the developer needs to know the right dependency order. For instance, The file containing 
+# 	 Backbone cannot come before the jQuery tag
+#  4. It requires extra tooling to substitute a set of script tags into one tag for optimized deployment
+# 
+# This can be difficult to manage on large projects, particularly as scripts start to have many dependencies in a way that may overlap 
+# and nest. Hand-writing script tags is not very scalable, and it leaves out the capability to load scripts on demand
+# 
+# AMD:
+# 
+# The AMD format comes from wanting a module format that was better than today's "write a bunch of script tags with implicit dependencies 
+# that you have to manually order" and something that was easy to use directly in the browser. Something with good debugging 
+# characteristics that did not require server-specific tooling to get started
+# 
+# Module definition :
+# 
+# Using JavaScript functions for encapsulation has been documented as the module pattern :
+# 
+#  		(function () {
+#     		this.myGlobal = function () {};
+#  		}());
+# 
+# That type of module relies on attaching properties to the global object to export the module value, and it is difficult to declare 
+# dependencies with this model. The dependencies are assumed to be immediately available when this function executes. This limits the 
+# loading strategies for the dependencies
+# 
+# AMD addresses these issues by :
+# 
+#  1. Register the factory function by calling define(), instead of immediately executing it
+#  2. Pass dependencies as an array of string values, do not grab globals
+#  3. Only execute the factory function once all the dependencies have been loaded and executed
+#  4. Pass the dependent modules as arguments to the factory function
+# 
+#  		//Calling define with a dependency array and a factory function
+#  		define(['dep1', 'dep2'], function (dep1, dep2) {
+# 
+#      		//Define the module value by returning a value.
+#      		return function () {};
+# 
+#  		});
+# 
+# Named modules :
+# 
+# Notice that the above module does not declare a name for itself. This is what makes the module very portable. It allows a developer 
+# to place the module in a different path to give it a different ID/name. The AMD loader will give the module an ID based on how it is 
+# referenced by other scripts
+# 
+# However, tools that combine multiple modules together for performance need a way to give names to each module in the optimized file. 
+# For that, AMD allows a string as the first argument to define() :
+# 
+#  		//Calling define with module ID, dependency array, and factory function
+#  		define('myModule', ['dep1', 'dep2'], function (dep1, dep2) {
+# 
+#      		//Define the module value by returning a value.
+#      		return function () {};
+# 
+#  		});
+# You should avoid naming modules yourself, and only place one module in a file while developing. However, for tooling and performance, 
+# a module solution needs a way to identify modules in built resources
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                 TEST        			                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################

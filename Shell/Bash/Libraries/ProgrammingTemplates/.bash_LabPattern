@@ -1,0 +1,65 @@
+#!/bin/bash
+
+
+
+
+#										LabPattern - this script is used to create a pattern for quick creation and execution of experiemen files
+
+
+
+
+function CreateCppFileForExperiment {  #Create a lab enviroment file with basic template
+#$@ - test name
+	
+	PREVIOUS_DIRECTORY=$(pwd)
+
+	cd $ACTIVE_VERSION_LAB_DIRECTORY_FULL_PATH
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed moving to required directory\n"
+			return 1
+		fi
+
+printf "#include <iostream> \n\n\
+\
+\
+using namespace std;\n\n\n\
+\
+\
+class Test\n\
+{\n\
+public:\n\n\n\n\
+private:\n\n\
+};  //  class Test\n\n\n\n\
+int main()  \n\
+{\n\n	\
+\
+\
+try\n    \
+{\n\n\n\n    \
+\
+\
+}\n    \
+catch ( const exception& stdException )\n    \
+{\n    \
+	cout << stdException.what() << endl;\n    \
+}\n\n    \
+\
+\
+return ( 0 );\n}" > $@Test.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed setting the template into the unitest file\n"
+			return 1
+		fi
+
+	subl $@Test.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to open unitest file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias newlab='CreateCppFileForExperiment'

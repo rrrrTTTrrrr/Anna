@@ -1,0 +1,91 @@
+/* This css file is used to set the layout of the page. The grid will be defined, it helps set the HTML elements into the right location 
+   and allows the webapplication to be responsive to changes in the screen size */
+
+
+/* Define the main grid */
+.Grid {
+
+  display: grid;
+  width: 100%;
+  height: 100%;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 50px 600px 300px;
+  grid-template-areas: "header header header"
+                       "body body body"
+                       "footer footer footer";           
+}
+
+
+/* Define the header subgrid */
+.HeaderLayout {
+    
+    grid-area: header;
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 80px 80px 100px;
+    grid-template-rows: 20px 50px;
+}
+
+  .LogoLayout {
+
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .MotivationLayout {
+
+    grid-column: 3;
+    grid-row: 2;
+  }
+
+  .HowItWorksLayout {
+
+    grid-column: 4;
+    grid-row: 2;
+  }
+
+  .LoginLayout {
+
+    grid-column: 10;
+    grid-row: 2;
+  }
+
+  .JoinLayout {
+
+    grid-column: 11;
+    grid-row: 2;
+  }
+
+  .ProfileLayout {
+
+    grid-column: 10 / 11;
+    grid-row: 2;
+  }
+
+
+/* Define the body subgrid */
+.BodyLayout {
+
+    grid-area: body;
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 100px;
+    grid-template-rows: 100px 100px 100px 100px 1fr;
+}
+
+  .MainTextLayout {
+
+    grid-column: 6 / 11;
+    grid-row: 2 / 3;
+  }
+
+  .SearchBoxLayout {
+
+    grid-column: 6 / 8;
+    grid-row: 5; 
+  }
+
+
+/* Define the footer subgrid */
+.FooterLayout {
+
+    grid-area: footer;
+}

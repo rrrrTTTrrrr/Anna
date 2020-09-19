@@ -1,0 +1,155 @@
+#ifndef  GENERATOR_CPP
+#define  GENERATOR_CPP
+
+
+#include "Generator.hpp"
+
+
+// This additional headers are only needed in test mode
+#ifdef TEST_MODE
+#endif
+
+
+namespace Universe 
+{
+
+    namespace Random
+    {
+
+
+		// Forward declarations :
+		//
+		//  NONE
+		//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// *********************************************************************************   TESTING   ********************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		DEBUG_TOOL(
+
+			// Method Information :
+			//
+			//  Description :
+			//
+			//		This method is used to test the object. It is not part of the implementation, it is only used to find problem with the code that does implement
+			//		the functionality
+			//
+			//  Required arguments :
+			//
+			//		User information needed :
+			//
+			//			NONE
+			//
+			//		Information returned to the user :
+			//
+			//			NONE
+			//
+			//  Return value :
+			//
+			//		1. true - if the object passed the test
+			//		2. false - otherwise
+			//
+			//  Expectations :
+			//
+			//		NONE
+			//
+			//  Possible errors :
+			//
+			//		1. An assertion failed - class Exception or ErrnoException is thrown
+			//		2. There is no more free memory space - class std::bad_alloc is thrown
+			//		3. 
+			//
+			void Generator::Test()
+			{
+				// The point of the test is to see that all the following options compile and work
+
+				// std::cout << Get< UnsignedInteger32bits >() << std::endl;
+				// std::cout << Get< UnsignedInteger32bits&& >() << std::endl;
+				// std::cout << Get< UnsignedInteger32bits&& >() << std::endl;
+				// std::cout << Get< UnsignedInteger32bits&& >() << std::endl;
+				// std::cout << Get< UnsignedInteger32bits&& >() << std::endl;
+
+				// const UnsignedInteger32bits& uu = Get< const volatile UnsignedInteger32bits&& >();
+				// std::cout << uu << std::endl;
+			}
+
+		)  //  End of debug tool
+
+
+
+
+
+
+
+
+
+
+
+    }  //  Namespace Random
+
+
+}  //  Namespace Universe
+
+
+#endif  //  GENERATOR_CPP
+
+
+
+
+

@@ -1,0 +1,204 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#								   		Security - this script is used as a door to the code, may only the good ones enter!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_11="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_SecurityLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                               ANTIVIRUS    			                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+#clamav can be used to scan for viruses on Linux...
+
+#freshclam is a virus data base update tool for clamav. After the installation, the command freshclam can be used to update the data base. With the clamav package comes
+#also the daemon clamav-freshclam, it starts on boot and update the data base regularly
+
+
+function Update_CLAMAV_VirusDataBase {  #Update clamav virus data base
+
+	Does3DpartyExecutableExist clamscan
+		if [ $? -eq 1 ]
+		then
+
+			sudo freshclam
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to update the clamav virus data base\n"
+					return 1
+				fi
+				
+		else
+
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "the clamav package is not installed on the system\n"
+			return 1
+
+		fi
+	
+	return 0
+}
+alias bghfnmywwwhjmjkkgggbbbbbggkkkk='Update_CLAMAV_VirusDataBase'
+
+
+function CLAMAV_FRESHCLAM_Daemon_Command {  #Stop clamav-freshclam virus data base daemon
+#$@ - the command to be given to the clamav-freshclam daemon
+
+	Does3DpartyExecutableExist clamscan
+		if [ $? -eq 1 ]
+		then
+
+			sudo /etc/init.d/clamav-freshclam $@ > /dev/null
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "clamav-freshclam update daemon failed - $@\n"
+					return 1
+				fi
+
+		else
+
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "the clamav package is not installed on the system\n"
+			return 1
+				
+		fi
+	
+	return 0
+}
+alias clamfresh='CLAMAV_FRESHCLAM_Daemon_Command'
+
+
+function RunUpdateAsDaemon_CLAMAV_VirusDataBase {  #Update clamav virus data base at background as a daemon the required times per day
+#$@ - the number of times the freshclam should check for updates in the data base per day
+
+	Does3DpartyExecutableExist clamscan
+		if [ $? -eq 1 ]
+		then
+
+			sudo freshclam --daemon --checks=$@ 
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to run the freshclam update daemon for clamav\n"
+					return 1
+				fi
+
+		else
+
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "the clamav package is not installed on the system\n"
+			return 1
+				
+		fi
+	
+	return 0
+}
+alias bghfnmywwwhjmjkkgggbbbbbbbbbbbggkkkk='RunUpdateAsDaemon_CLAMAV_VirusDataBase'
+
+
+##########################################################################   SCAN FOR INFECTED AREAS   #########################################################################
+
+
+#To scan a file or directory use the command clamscan!
+
+
+function ScanForInfectedAreasInDirectory_CLAMAV {  #Scan the required directory for infected areas
+#$1 - the full path and name of the required directory to scan
+
+	Does3DpartyExecutableExist clamscan
+		if [ $? -eq 1 ]
+		then
+
+			CURRENT_DATE=$(date --iso-8601)
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to get the current date\n"
+					return 1
+				fi
+
+			sudo clamscan --infected --recursive --exclude=/sys --log=/tmp/ClamavScan_$CURRENT_DATE.txt $@ > /dev/null
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to scan the required directory using clamav\n"
+					return 1
+				fi
+				
+			subl "/tmp/ClamavScan_$CURRENT_DATE.txt"
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to open the clamav scan results\n"
+					return 1
+				fi
+
+		else
+
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "the clamav package is not installed on the system\n"
+			return 1
+
+		fi
+	
+	return 0
+}
+alias sffgdfntmkliouj='ScanForInfectedAreasInDirectory_CLAMAV'
+
+
+function ScanForInfectedAreasInFile_CLAMAV {  #Scan the required file for infected areas
+#$1 - the full path and name of the required file to scan
+
+	Does3DpartyExecutableExist clamscan
+		if [ $? -eq 1 ]
+		then
+
+			sudo clamscan --log="/tmp/ClamavScan_$1_$(date --iso-8601).txt" $@
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to scan the required file using clamav\n"
+					return 1
+				fi
+
+			subl "/tmp/ClamavScan_$1_$(date --iso-8601).txt"
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "Failed to open the clamav scan results\n"
+					return 1
+				fi
+
+		else
+
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_11 $FUNCNAME "the clamav package is not installed on the system\n"
+			return 1
+
+		fi
+	
+	return 0
+}
+alias sffgdfntmklglsddiouj='ScanForInfectedAreasInFile_CLAMAV'

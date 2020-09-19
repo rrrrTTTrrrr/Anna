@@ -1,0 +1,331 @@
+#!/bin/bash
+
+
+
+
+#										     TestPattern - this script is used to create a pattern for quick testing
+
+
+
+
+function CreateCppFileForTestingObjectCompileItAndExecute {  #Create a test file for an object
+#$1 - tested object name
+#$2 - tested object namespace - in case no other namespace is needed enter the charcter 'n'
+#$3 - the letter 'c' if the object is not a template which means it contains also a source file, in case this is not needed use any other character
+#$4 - a string with all the template arguments of the object testes seperated with comma
+
+	HeaderFileName=$1
+		
+	HeaderFileNameFirstLetterUpperCase="${HeaderFileName^}"
+
+	PREVIOUS_DIRECTORY=$(pwd)
+
+	cd /tmp/
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed moving to required directory\n"
+			return 1
+		fi
+
+	TemplateArgumentsString=""
+
+	if [ $# -eq 4 ]
+	then
+
+		TemplateArgumentsString="<"$4">"
+
+	fi
+
+	if [ "$2" = "n" ]
+	then
+
+printf "#include <iostream>\n\n\n\
+\
+\
+#include \"$PREVIOUS_DIRECTORY/$HeaderFileNameFirstLetterUpperCase.hpp\"\n\n\n\
+\
+\
+#include \"$ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.hpp\"\n\n\n\
+\
+\
+using namespace std;\n\
+using namespace Universe;\n\n\n\
+\
+\
+int main()\n\
+{\n\n    \
+\
+\
+try\n    \
+{\n\n\n    	\
+\
+\
+// Call the test method of the object\n    	\
+${HeaderFileNameFirstLetterUpperCase}${TemplateArgumentsString}::Test();\n\n\n    \
+\
+\
+}\n    \
+catch ( const Error::Exception& exception )\n    \
+{\n    	\
+exception.TellMe();\n    \
+}\n    \
+catch ( const exception& stdException )\n    \
+{\n    \
+	cout << stdException.what() << endl;\n    \
+}\n\n    \
+\
+\
+return ( 0 );
+}\n\n\n" > ${HeaderFileNameFirstLetterUpperCase}Test.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed setting the template into the test file\n"
+			return 1
+		fi
+
+	else
+
+printf "#include <iostream>\n\n\n\
+\
+\
+#include \"$PREVIOUS_DIRECTORY/$HeaderFileNameFirstLetterUpperCase.hpp\"\n\n\n\
+\
+\
+#include \"$ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.hpp\"\n\n\n\
+\
+\
+using namespace std;\n\
+using namespace Universe;\n\n\n\
+\
+\
+int main()\n\
+{\n\n    \
+\
+\
+try\n    \
+{\n\n\n    	\
+\
+\
+// Call the test method of the object\n    	\
+$2::${HeaderFileNameFirstLetterUpperCase}${TemplateArgumentsString}::Test();\n\n\n    \
+\
+\
+}\n    \
+catch ( const Error::Exception& exception )\n    \
+{\n    	\
+exception.TellMe();\n    \
+}\n    \
+catch ( const exception& stdException )\n    \
+{\n    \
+	cout << stdException.what() << endl;\n    \
+}\n\n    \
+\
+\
+return ( 0 );
+}\n\n\n" > ${HeaderFileNameFirstLetterUpperCase}Test.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed setting the template into the test file\n"
+			return 1
+		fi
+
+	fi
+
+	CompileAndExecuteString=""
+
+	if [ "$3" = "c" ]
+	then
+
+		CompileAndExecuteString="GNU_CompileFileDebugCPP2020 ${HeaderFileNameFirstLetterUpperCase}Test.cpp $PREVIOUS_DIRECTORY/$HeaderFileNameFirstLetterUpperCase.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/AsciiStringAndIntegers/AsciiStringAndIntegers.cpp"
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the command line string to compile and run the test\n"
+				return 1
+			fi
+
+	else
+
+		CompileAndExecuteString="GNU_CompileFileDebugCPP2020 ${HeaderFileNameFirstLetterUpperCase}Test.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/AsciiStringAndIntegers/AsciiStringAndIntegers.cpp"
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the command line to compile and run the test\n"
+				return 1
+			fi
+
+	fi
+
+	$CompileAndExecuteString
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+		
+	return 0
+}
+alias testthis='CreateCppFileForTestingObjectCompileItAndExecute'
+
+
+function CreateCppFileForTestingObjectRelatedToLinuxCompileItAndExecute {  #Create a test file for an object that relates to linux and need errno support
+#$1 - tested object name
+#$2 - tested object namespace - in case no other namespace is needed enter the charcter 'n'
+#$3 - the letter 'c' if the object is not a template which means it contains also a source file
+
+	HeaderFileName=$1
+		
+	HeaderFileNameFirstLetterUpperCase="${HeaderFileName^}"
+
+	PREVIOUS_DIRECTORY=$(pwd)
+
+	cd /tmp/
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed moving to required directory\n"
+			return 1
+		fi
+
+	TemplateArgumentsString=""
+
+	if [ $# -eq 4 ]
+	then
+
+		TemplateArgumentsString="<"+$4+">"
+
+	fi
+
+	if [ "$2" = "n" ]
+	then
+
+printf "#include <iostream>\n\n\n\
+\
+\
+#include \"${PREVIOUS_DIRECTORY}/${HeaderFileNameFirstLetterUpperCase}.hpp\"\n\n\n\
+\
+\
+#include \"$ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.hpp\"\n\
+#include \"$ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/ErrnoException/ErrnoException.hpp\"\n\n\n\
+\
+\
+using namespace std;\n\
+using namespace Universe;\n\n\n\
+\
+\
+int main()\n\
+{\n\n    \
+\
+\
+try\n    \
+{\n\n\n    	\
+\
+\
+// Call the test method of the object\n    	\
+${HeaderFileNameFirstLetterUpperCase}${TemplateArgumentsString}::Test();\n\n\n    \
+\
+\
+}\n    \
+catch ( const Error::ErrnoException& exception )\n    \
+{\n    	\
+exception.TellMe();\n    \
+}\n    \
+catch ( const Error::Exception& exception )\n    \
+{\n    	\
+exception.TellMe();\n    \
+}\n    \
+catch ( const exception& stdException )\n    \
+{\n    \
+	cout << stdException.what() << endl;\n    \
+}\n\n    \
+\
+\
+return ( 0 );
+}\n\n\n" > ${HeaderFileNameFirstLetterUpperCase}Test.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed setting the template into the test file\n"
+			return 1
+		fi
+
+	else
+
+printf "#include <iostream>\n\n\n\
+\
+\
+#include \"$PREVIOUS_DIRECTORY/$HeaderFileNameFirstLetterUpperCase.hpp\"\n\n\n\
+\
+\
+#include \"$ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.hpp\"\n\
+#include \"$ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/ErrnoException/ErrnoException.hpp\"\n\n\n\
+\
+\
+using namespace std;\n\
+using namespace Universe;\n\n\n\
+\
+\
+int main()\n\
+{\n\n    \
+\
+\
+try\n    \
+{\n\n\n    	\
+\
+\
+// Call the test method of the object\n    	\
+$2::${HeaderFileNameFirstLetterUpperCase}${TemplateArgumentsString}::Test();\n\n\n    \
+\
+\
+}\n    \
+catch ( const Error::ErrnoException& exception )\n    \
+{\n    	\
+exception.TellMe();\n    \
+}\n    \
+catch ( const Error::Exception& exception )\n    \
+{\n    	\
+exception.TellMe();\n    \
+}\n    \
+catch ( const exception& stdException )\n    \
+{\n    \
+	cout << stdException.what() << endl;\n    \
+}\n\n    \
+\
+\
+return ( 0 );
+}\n\n\n" > ${HeaderFileNameFirstLetterUpperCase}Test.cpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed setting the template into the test file\n"
+			return 1
+		fi
+
+	fi
+
+	CompileAndExecuteString=""
+
+	if [ "$3" = "c" ]
+	then
+
+		CompileAndExecuteString="GNU_CompileFileDebugCPP2020 ${HeaderFileNameFirstLetterUpperCase}Test.cpp $PREVIOUS_DIRECTORY/$HeaderFileNameFirstLetterUpperCase.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Exception/Exception.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/ErrnoException/ErrnoException.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/AsciiStringAndIntegers/AsciiStringAndIntegers.cpp"
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the command line to compile and run the test\n"
+				return 1
+			fi
+
+	else
+
+		CompileAndExecuteString="GNU_CompileFileDebugCPP2020 ${HeaderFileNameFirstLetterUpperCase}Test.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/Error/Exception/Exception.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/ErrnoException/ErrnoException.cpp $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/AsciiStringAndIntegers/AsciiStringAndIntegers.cpp"
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the command line to compile and run the test\n"
+				return 1
+			fi
+
+	fi
+
+	$CompileAndExecuteString
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	return 0
+}
+alias testlinux='CreateCppFileForTestingObjectRelatedToLinuxCompileItAndExecute'

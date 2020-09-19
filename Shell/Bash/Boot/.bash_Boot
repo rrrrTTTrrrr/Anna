@@ -1,0 +1,272 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#									        Boot - this script is used to enable all the additions to the base source code ANNA requires
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# This variable will store the file full path
+FILE_FULL_PATH_0="/home/$USER/Anna/AnnaVersions/$(ls /home/$USER/Anna/AnnaVersions/ | sort | tail -1)/Shell/Bash/Boot/.bash_Boot"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                 ENVIRONMENT    			                                                             ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+function GetActiveAnnaVersion {  # Use to find the last version and return it
+
+	ls /home/$USER/Anna/AnnaVersions/ | sort | tail -1
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed getting active version of anna\n"
+			return 1
+		fi
+
+	return 0
+}
+alias getactiveversion='GetActiveAnnaVersion'
+
+
+# Set the variable that will be used to store the last version
+VERSION="$(GetActiveAnnaVersion)"
+	if [ $? -ne 0 ]
+	then
+		printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed getting active version\n"
+		return 1
+	fi
+	
+
+# This variable will be used to store the last version full path
+ROOT_FULL_PATH=/home/$USER/Anna/AnnaVersions/$VERSION
+
+
+
+################################################################################################################################################################################
+#                                                              		      INCLUDE ALL BASH SOURCE CODE                           				                           	   #
+################################################################################################################################################################################
+
+
+
+for fileAbsolutePath in $ROOT_FULL_PATH/Shell/Bash/Libraries/.bash_*; do
+    source $fileAbsolutePath
+    	if [ $? -ne 0 ]
+    	then
+			Logger_WriteLogMessage $LOG_FILE_FULL_PATH $FILE_FULL_PATH_0 "Failed adding the base source code file library - $fileAbsolutePath\n"
+			return 1
+		fi
+done
+
+
+
+################################################################################################################################################################################
+#                                                              			 	 ENVIONRMENT VARIABLES                           				                                   #
+################################################################################################################################################################################
+
+
+
+##############################################################################   TIME AND DATE   ###############################################################################
+
+
+# This variable will store the only the base session start date
+START_DATE=$(Date)
+	if [ $? -ne 0 ]
+	then
+		return 1
+	fi
+
+
+# This variable will store the only the base session start time
+START_TIME=$(Time)
+	if [ $? -ne 0 ]
+	then
+		return 1
+	fi
+
+
+# This variable will store the bash session start time and date
+START_DATE_AND_TIME="${START_DATE}_${START_TIME}"
+
+
+##############################################################################    FILE SYSTEM   ################################################################################
+
+
+# Varibale to store the root directoy full path 
+ROOT_DIRECTORY_FULL_PATH="$ROOT_FULL_PATH/Root"
+
+# Varibale to store the test directoy full path 
+TEST_DIRECTORY_FULL_PATH="$ROOT_FULL_PATH/Lab"
+
+# Varibale to store the lab directoy full path 
+LAB_DIRECTORY_FULL_PATH="$ROOT_FULL_PATH/UsageData"
+
+# This variable will store the last version bash directory full path
+BASH_DIRECTORY_FULL_PATH="$ROOT_FULL_PATH/Shell/Bash"
+
+# This variable will store the session log file full path
+LOG_FILE_FULL_PATH="$BASH_LOGGER_LOG_FILES_STORAGE_DIRECTORY_FULL_PATH/BashLogFile_$START_DATE_AND_TIME.txt"
+
+# This variable will be used to to store the current directory when moving to another directory
+PREVIOUS_DIRECTORY=0
+
+# This variable will store the full path of the directory that stores the log files
+BASH_LOGGER_LOG_FILES_STORAGE_DIRECTORY_FULL_PATH="$BASH_DIRECTORY_FULL_PATH/BashLogger/LogFiles"
+
+# This variable will store the full path of the 'UsageData' directory
+USAGE_DATA_DIRECTORY_FULL_PATH="$ROOT_FULL_PATH/UsageData"
+
+# This variable will be used to to store a pinned directory that will be used to move to that directory quickly
+USER_PINNED_DIRECTORY="$(cat $USAGE_DATA_DIRECTORY_FULL_PATH/System.PinnedWorkingDirectoryInBash)"
+
+
+
+################################################################################################################################################################################
+#                                                              			  	    ENABLE BASH LOGGER                                                                     		   #
+################################################################################################################################################################################
+
+
+
+# This variable will be used to determine if the user required the logger ON ( 1 ) or OFF ( 0 )
+LOGGER_STATE=1
+
+# This variable will be used to determine if the user required the logger to write to a file ( 1 ) or to the output stream which is the screen ( 0 )
+LOGGER_OUTPUT=0
+
+#Create the session log file
+CreateLoggerSessionFile $LOG_FILE_FULL_PATH
+	if [ $? -ne 0 ]
+	then
+		printf "$FILE_FULL_PATH_3  --  Failed creating the bash session log file\n"
+		return 1
+	fi
+
+
+
+################################################################################################################################################################################
+#                                                              			         ENABLE SECURITY                         				                                       #
+################################################################################################################################################################################
+
+
+
+#Scan the system for infected files
+# ( ScanForInfectedAreasInDirectory_CLAMAV /home/$USER/Downloads/ ) &
+
+
+#You are secure to come inside!!
+
+
+
+################################################################################################################################################################################
+#                                                              		 ENABLE 3D PARTY EXECUTABLES ENVIRONMENT               				                                       #
+################################################################################################################################################################################
+
+
+
+# Ensure that all the 3D party executables are installed and updated
+InstallOrUpdate_3DpartyExecutables
+	if [ $? -ne 0 ]
+	then
+		Logger_WriteLogMessage $LOG_FILE_FULL_PATH $FILE_FULL_PATH_0 "Failed to install or update 3D party executables\n"
+		return 1
+	fi
+
+
+
+################################################################################################################################################################################
+#                                                             ADD ALL THE BASH ANNA PROGRAMMING TEMPLATES SOURCE CODE               				                           #
+################################################################################################################################################################################
+
+
+
+for fileAbsolutePath in $BASH_DIRECTORY_FULL_PATH/Libraries/ProgrammingTemplates/.bash_*; do
+    source $fileAbsolutePath
+    	if [ $? -ne 0 ]
+    	then
+			Logger_WriteLogMessage $LOG_FILE_FULL_PATH $FILE_FULL_PATH_0 "Failed adding the base source code file with the programming templates - $fileAbsolutePath\n"
+			return 1
+		fi
+done
+
+
+
+################################################################################################################################################################################
+#                                                        CREATE A TRAP FOR END OF SESSION TO ENABLE GRACEFULL ENDING      				                                       #
+################################################################################################################################################################################
+
+
+
+#Create a trap to enable the session to end with certain predefined tasks
+trap "ExitOperations" EXIT
+
+
+
+################################################################################################################################################################################
+#                               NOW THE ENVIRONMENT IS READY!! MOVE CONTROL TO THE LAST USED DIRECTORY OF LAST SESSION, AND PASS CONTROL TO USER                               #
+################################################################################################################################################################################
+
+
+
+#Finally, user do something useful you fat fuck!!
+
+
+# Set the command prompt to display the required format
+PS1="\\[\\033[01;31m\\]\\u@\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$"
+
+# Clear the screen
+clear
+
+# Let cowsay make me happy! 
+y="fuck my life"
+cowsay "${y^^}"
+printf "\n\n\n"
+
+# Add hebrew
+AddHebrew
+	if [ $? -ne 0 ]
+	then
+		return 1
+	fi
+
+# Backup the active anna version in case something happens
+BackupActiveAnnaVersion
+	if [ $? -ne 0 ]
+	then
+		return 1
+	fi
+
+# Move to the last directory used in last session
+MoveToLastWorkingDirectoryBeforeBashSessionEnded
+	if [ $? -ne 0 ]
+	then
+		return 1
+	fi

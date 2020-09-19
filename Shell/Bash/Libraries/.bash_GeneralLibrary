@@ -1,0 +1,1695 @@
+#!/bin/bash
+
+
+
+
+# function ScreenSaver  {  #Use this to activate the matrix screen saver when the computer is not used
+
+# 	idleTimeToWait=$((2*60*1000))
+
+# 	IsCmatrixOn=0
+
+# 	while true
+# 	do
+# 		idleTimePassed=$(xprintidle)
+# 		if [ $idleTimePassed -ge $idleTimeToWait ]
+# 		then
+# 			if [ $IsCmatrixOn -eq 0 ]
+# 			then
+# 				IsCmatrixOn=1
+# 				cmatrix & disown
+# 			fi
+# 		else
+# 			if [ $IsCmatrixOn -eq 1 ]
+# 			then
+# 				IsCmatrixOn=0
+# 				kill -SIGTERM $(ps -eF | grep cmatrix | head -1 | awk '{print $2;}')
+# 				clear
+# 			fi
+# 		fi
+# 		sleep 1
+# 	done
+# }
+# alias savesave='ScreenSaver'
+
+# ScreenSaver & disown
+
+##########udev rules
+
+
+alias intel1='openpdf /home/$USER/Anna/LearningMaterial/Assembly/Intel64architecrue/64-ia-32-architectures-software-developer-basic-architecture-reference-manual.pdf'
+alias intel2='openpdf /home/$USER/Anna/LearningMaterial/Assembly/Intel64architecrue/64-ia-32-architectures-software-developer-instruction-set-reference-manual-325383.pdf'
+alias intel3='openpdf /home/$USER/Anna/LearningMaterial/Assembly/Intel64architecrue/64-ia-32-architectures-software-developer-system-programming-manual-325384.pdf'
+alias loff='libreoffice & disown'
+alias music='subl ~/Anna/Managment/ProgrammingAid/Music/MusicBeforeSuicide.txt'
+
+
+
+
+
+
+
+
+
+
+
+# This variable will store the file full path
+FILE_FULL_PATH_5="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_GeneralLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                 BASH    			                                                                     ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+#The barckets "()" can be used to fork a subshell!!
+
+
+
+################################################################################################################################################################################
+#                                                                                  LANGUAGE                                                                                    #
+################################################################################################################################################################################
+
+
+
+# To Enable hebrew in ubuntu :
+#
+#	setxkbmap -option grp:switch,grp:alt_shift_toggle,grp_led:scroll us,il
+#
+# To make this permanent, run the command:
+#
+#	gksudo gedit /etc/xdg/lxsession/LXDE/autostart
+#
+# Enter the password, and add the line to enable hebrew in there, save and exit
+
+function AddHebrew {  #Use to enable hebrew
+
+	setxkbmap -option grp:switch,grp:alt_shift_toggle,grp_led:scroll us,il
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed adding hebrew\n"
+			return 1
+		fi
+
+	return 0
+}
+alias heb='AddHebrew'
+
+
+
+################################################################################################################################################################################
+#                                                                                      ROOT                                                                                    #
+################################################################################################################################################################################
+
+
+
+#Use the su command without any arguments, or with arguments to change the current user while in another user session
+
+
+function EnterSuperUserMode {  # Use to enter super user mode, in this mode there is no need to provide password
+
+	sudo -i
+		if [ $? -eq 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to use sudo to prevent writing the password every use of sudo command\n"
+			return 1
+		fi
+
+	return 0
+}
+alias rrrr='EnterSuperUserMode'
+
+
+# The command line tool "apt-get" is to handle packages:
+#
+# 	1. update - is used to resynchronize the package index files from their sources via remote connection, syntax -> apt-get update
+#
+#	2. upgrade - is used to install the newest versions of all packages currently installed on the system, syntax -> apt-get upgrade
+#
+#	3. dist-upgrade - is used to update the kernel, syntax -> apt-get dist-upgrade
+
+
+
+################################################################################################################################################################################
+#                                                                                  NVIDIA DRIVERS                                                                              #
+################################################################################################################################################################################
+
+
+
+# To enable the NVIDIA drivers :
+#
+#	1. Open terminal and execute the following line   	->   	sudo add-apt-repository ppa:graphics-drivers/ppa
+#	2. Update the repositories addresses				->		sudo apt-get update
+#
+# 	Now outside of the terminal launch 'Software & Updates', and navigate to 'additional drivers' tab. Select the latest NVIDIA pacakge :
+#
+#		'Using NVIDIA driver metapackage from nvidia-driver-430 (open source)'
+#
+#	Press 'Apply changes' and it will perfrom the installation
+#
+#   The last step can be done also via terminal :
+#
+#	3. sudo apt install nvidia-driver-430 nvidia-settings
+
+
+
+################################################################################################################################################################################
+#                                                                                    PPA MANAGER                                                                               #
+################################################################################################################################################################################
+
+
+
+# If when using the apt-get update command and the error NO_PUBKEY is encountered :
+#
+# 1. Install Y-PPA-Manager :
+#
+#		sudo add-apt-repository ppa:webupd8team/y-ppa-manager
+#		sudo apt-get update
+#		sudo apt-get install y-ppa-manager
+#
+# 2. Run the Y-PPA-Manager - y-ppa-manager
+#
+# 3. When the main y-ppa-manager window appears, click on adavanced
+# 4. From the list of advanced tasks, select "Try to import all missing GPG keys" and click OK
+#
+# That's it!
+
+
+
+################################################################################################################################################################################
+#                                                                                   GENERAL BASH                                                                               #
+################################################################################################################################################################################
+
+
+
+# Use the combination of keys -> Ctrl+shift+=  to zoom in at the terminal, to zoom out use the
+# combination -> Ctrl+-
+
+
+# Bash shortcut keys:
+#
+#	1. Find   ->   Shift+Ctrl+F
+#
+#	2. Find next   ->    Shift+Ctrl+G
+#
+#	3. Find previous    ->     Shift+Ctrl+H
+#
+#	4. Clear find highlight    ->     Shift+Ctrl+J
+
+
+# To evalute the right side of an expression only if the exit status of the left expression is 0 use -> &&
+# To evalute the right side of an expression only if the exit status of the left expression is non 0 use -> ||
+
+
+# Alias for ls as LS:
+alias LS='ls'
+
+
+# To include a bash script into shell use -> "source file_name" or ". file_name"
+
+
+# Alias to run the default name executble for GCC :
+alias a='./a.out'
+
+
+function GetProcessID {  #Use to find a process ID
+#$@ - proccess information
+	
+	ps -ef -T | grep $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to get process ID\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gpid='GetProcessID'
+
+
+#Extended Globing :
+#
+#To exclude some things use -> !( )
+alias eeg='shopt -s extglob'
+alias deg='shopt -u extglob'
+
+
+# To store a command output in a variable use -> OUTPUT="$(command)"
+# 
+# Quoting do matter to preserve multi-line values
+
+
+function GetUlimitInformation {  #See ulimit information
+	
+	ulimit -a
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting information using ulimit\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias ula='GetUlimitInformation'
+
+
+function ChangeCoreDumpFileSize {  #Enable core dump by changing the core file size to unlimited
+	
+	ulimit -c unlimited
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting information using ulimit\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias encd='ChangeCoreDumpFileSize'
+
+
+# 1. Use to get the current function name - $FUNCNAME
+# 2. To use more then one line use '\' at the end or ' '
+# 3. To use more then one command in a line use ';' ( will do all the commands ) or '&&' ( will only keep going if the commands succeed )
+# 4. Use ctrl+R to search for a command already used
+
+
+function RunCommandMultipleTimes {  #To run the same command in frequency
+#$1 - required command
+#$2 - number of times to perform command
+	
+	watch -n $2 $1
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed running command multiple times using watch\n"
+			return 1
+		fi
+	
+	return 0	
+}
+alias rmto='RunCommandMultipleTimes'
+
+
+function CreateShortCutToFile {  #Use to create a shortcut to an existing file
+#$1 - file name including path
+#$2 - shortcut to be created
+	
+	link $1 $2
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed creating shortcut to the file\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias linky='CreateShortCutToFile'
+
+
+function DeleteShortCutToFile {  #Use to delete current shortcut to a file
+#$@ - shortcut to be deleted
+	
+	unlink $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed remove shortcut\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias unlinky='DeleteShortCutToFile'
+
+
+# Ctrl + C -> send kill signal to process
+# Ctrl + Z -> pause process
+# List current paused processes ( list by numbers )  use -> jobs
+# Reactivate paused process use -> fg process_number ( as listed by jobs command )
+
+
+# Screen command - full screen software program that can be used to multiplexes a physical console between several processes. It offers a user to open several 
+# separate terninal instances inside a one single terminal window, to use it -> screen. To display the options use -> Ctrl+a and then ?
+
+
+# To count the number of objects ,in a file or output from command, like words and lines use -> wc
+#
+# For lines use -> wc -l
+
+
+# GREP :
+#
+#	1. Use the -o option to get only the matching part and not the all line
+#
+#	2. Use the -F option to interpret the stirng as it is (  no expansions )
+
+
+#STRING MANIPULATION CHARACTER:
+#1. Percent ( %) - Will find the last apperance of character and strip the end of string until it -> ${variable%character*}
+#2. Number sign ( # ) -  Will find the first apperance of character and strip the begining of string
+#3.	until it -> ${variable%character*}
+#4. Convert first letter of string to upper case ->  "${string^}"
+#5. Convert entire string to upper case letters ->  "${string^^}"
+#6. Convert first letter of string to upper case ->  "${string,}"
+#7. Convert entire string to upper case letters ->  "${string,,}"
+
+
+#USEFUL SYNTAX:
+#printenv -> Print environment variables
+#$0 -> Name of command
+#$# -> Number of items in command line
+#$@ -> Contains all arguments to command
+#$1 -> Contains the first argument to command
+#${@:number} -> Contains all the command line arguments starting from the given number
+
+
+#The conditional operator ?: returns one of two values depending on the value of a boolean expression, syntx :
+#	condition ? first_expression : second_expression
+
+
+#EXPANSION:
+#1. In single qoute everything is preserved without exception. This means to enable
+#expansion of variables and more, the qoutes must be closed and then reopened, for example:
+#	'before'"$variable"'after'
+#2. For the value of a variable -> $variable
+#3. For the valude of a command -> $(command)
+#4. Use curel brackets in the following cases:
+#	a. "${foo}bar" - to expand only foo and not foobar
+#	b. Expanding arrays - ${array[42]}
+#	c. When using parameter expansion operations, for example ${filename%.*}
+#	d. Expanding positional parameters beyond 9 - "$9 ${10} ${11}"
+
+
+#COMMAND HISTORY:
+#To display command history -> history
+#to search through the command history -> ctrl + R
+
+
+#OPEN NEW TERMINAL SESSION:
+#There are few options:
+#1. gnome-terminal:
+#		open it with specific profile ->  --window-with-profile=profile_name
+#		to call the terminal and perform a command -> -e "command and arguments" & disown
+#		to make the terminal open in maximazed size -> --maximize
+
+
+function UseGnomeToOpenFile {  #Gnome will choose the assigned progarm to open the file
+#$@ - file name ( can be any extension pdf, txt... )
+#PossibleReplacment#ggs-open $@ & disown
+	
+	ggs-open $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed opening file using ggs-open\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias openthis='UseGnomeToOpenFile'
+
+
+function DisplayPdfFiles {  #Display pdf files
+#$@ - file name
+#PossibleReplacment#evince $@
+	
+	xdg-open $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying pdf file using xdg-open\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias openpdf='DisplayPdfFiles'
+
+
+function DisplayOdtFiles {  #Display odt files
+#$@ - file name
+#PossibleReplacment#evince $@
+	
+	libreoffice --writer $@ & disown
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying odt file using libre office\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias openodt='DisplayOdtFiles'
+
+
+#GREP:
+#1. Use the -o option to get only the matching part and not the all line
+#2. Use the -F option to interpret the stirng as it is (  no expansions )
+
+
+function GetPageSize {  #Use to get the system's default page size
+	
+	getconf PAGE_SIZE
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting the system default page size\n"
+			return 1
+		fi
+	
+	return 0	
+}
+alias gps='GetPageSize'
+
+
+#To check if a variable has some pattern, use:
+#	[[ $variable == *[pattern] ]] && printf "Yes" || printf "No"
+
+
+#Set bash command:
+#It enables options within a script. When the functionality should be applied, use set this way:
+#		set -o option-name
+#or,
+#		set -option-abbrev
+#These two forms are equivalent. Here is some examples of set options:
+#
+#      set -o verbose       Echoes all commands before executing
+#
+#      set -v				Exact same effect as above
+#Note:
+#
+#To disable an option within a script, use set this way:
+#
+#		set +o option-name			Doesn't Echoe before executing command
+#or,
+#
+#		set +option-abbrev			Exact same effect as above
+
+
+function DeleteUser {  #Use to delete the required user
+#$@ - user name
+	
+	userdel $@
+		if [ $? -ne 0 ]
+		then
+			printf "The function that failed : $FUNCNAME\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias lasmsdwlw='DeleteUser'
+
+
+#Use -> sudo apt autoremove - autoremove is used to remove packages that were automatically installed to
+#satisfy dependencies for some package and that are no longer needed
+
+
+######################################################################   COMMAND PROMPT ENVIRONMENT VARIABLES   ################################################################
+
+
+#The linux command prompt enviornment variables include:
+#
+#1. PS1 - change default interaction prompt behavior. Few options:
+#	a. \u - User name
+#	b. \h - Host name
+#	c. \w - Full pathname of current directory
+#	d. [\$(date +%k:%M:%S)] OR \t OR \@ - time
+#	e. \$? - status of last command
+#	f. $(uname -r) - kernel version
+#	g. Colors suuport :
+#		\e[ - indicates the begining of color prompt
+#		x;ym - indicates color code
+#		\e[m - indicates the end of color prompt
+#Example   ->   export PS1="\u@\h \w> "
+#
+#2. PS2 - change default continuation interactive prompt behavior. A very long unic command can be broken
+#down to multiple line by adding \ to the end of the line. The default behavior is ">"
+#Example   ->   export PS2="continue-> "
+#
+#3. PROMPT_COMMAND - bash sheLl executes the contnent of the PROMPT_COMMAND just before displaying the PS1
+#variable. If the PROMPT_COMMAND should be in the same line as the PS1, use the echo -n
+#Example   ->  export PROMPT_COMMAND="date +%k:%m:%S"
+#Example   ->  export PROMPT_COMMAND="echo -n [ $( date +%k:%m:%S ) ]"
+
+
+##############################################################################   FILES AND DIRECTORIES   #######################################################################
+
+
+#To check the type of contetns a file contain use -> file file_name
+
+#To display the properties of a file or a directory use the command -> stat file_OR_directory_name
+#The stat command can also be used to dispaly information about the file system -> stat -f /
+
+
+
+################################################################################################################################################################################
+#                                                                                        KERNEL                                                                                #
+################################################################################################################################################################################
+
+
+
+#Use the lspci to list all current devices
+
+function DisplayModules {  #Dispaly all current modules
+	
+	ls /lib/modules/$(uname -r)
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to display modules\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dm='DisplayModules'
+
+
+function DisplayKernelDrivers {  #Display all drivers for various devices
+	
+	ls /lib/modules/$(uname -r)/kernel/drivers/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to display the kernel drivers\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dkd='DisplayKernelDrivers'
+
+
+#To display a list of partitions ( located in the file /proc/partitions ), use -> sudo fdisk -l 
+
+
+
+################################################################################################################################################################################
+#                                                                                           FUN                                                                                #
+################################################################################################################################################################################
+
+
+
+function StarWars {  #See star wars
+	
+	telnet towel.blinkenlights.nl
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to display star wars\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias starwars='StarWars'
+
+
+function Toilets {  #Use to get colored text
+	
+	toilet -f mono12 -F metal $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to display the text\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias toilet='Toilets'
+
+
+#asciiquarim:
+#apt-get install libcurses-perl
+#cd /tmp
+#wget http://search.cpan.org/CPAN/authors/id/K/KB/KBAUCOM/Term-Animation-2.4.tar.gz
+#tar -zxg Term-Animation-2.4.tar.gz
+#cd Term-Animation-2.4/
+#perl Makefile.PL &&  make &&   make test
+#make install
+#cd /tmp
+#wget http://www.robobunny.com/projects/asciiquarium/asciiquarium.tar.gz
+#tar -zxg asciiquarium.tar.gz
+#cd asciiquarium_1.1/
+#cp asciiquarium /usr/local/bin
+#chmod 0755 /usr/local/bin/asciiquarium
+
+
+
+################################################################################################################################################################################
+#                                                                                     SYSTEM INFORMATION                                                                       #
+################################################################################################################################################################################
+
+
+
+#To display who is logged on to the system use -> who
+alias user='printf $USER'
+
+function DisplaySystemInformationUsingUname {  #Get system information
+	
+	uname -a
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying system information using uname\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias sysinfou='DisplaySystemInformationUsingUname'
+
+
+function DisplaySystemInformationUsingLsbRelease {  #Get system information
+	
+	lsb_release -a
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying system information using lsb_release\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias sysinfol='DisplaySystemInformationUsingLsbRelease'
+
+
+function GetKernelVersion {  #Get kernel version
+	
+	uname -r
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting kernel version using uname\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gkerv='GetKernelVersion'
+
+
+#To list all connected usb use -> lsusb
+
+
+#The command "df" is used to report file system disk space usage
+#To display storage information use -> df -h
+
+
+function ListProcessUsingTheDevice {  #Use to display all current process using the required device
+#$@ - device path
+	
+	lsof $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed listing the processes using the required device\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias lpud='ListProcessUsingTheDevice'
+
+
+function IsDeviceConnected {  #Use to check if the required device is connected, returns 1 if the device is connected, and 0 otherwise
+#$@ - device label 
+
+	touch /media/$USER/$@/CHECK_FILE.cpp
+
+	if [ -e /media/$USER/$@/CHECK_FILE.cpp ]
+	then
+
+		rm /media/$USER/$@/CHECK_FILE.cpp
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed deleting the file that was used to check if the device is mounted\n"
+			fi		
+
+			return 1		
+	fi
+
+	return 0
+}
+alias llll='IsDeviceConnected'
+
+
+###################################################################################   MOUNT AND UNMOUNT   #######################################################################
+
+
+#Use the mount command to see all mounted devices
+
+
+function UnmountDeviceFromFileSystem {  #Unmount device
+#$@ - device name
+	
+	IsDeviceConnected $@
+		if [ $? -ne 1 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed because the device is not currently mounted\n"
+			return 1		
+		fi
+
+	sudo umount /media/$USER/$@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed unmounting device from file system\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias unmount='UnmountDeviceFromFileSystem'
+
+
+#To use this function use the mount command function to find the mount location of the the device /dev/something
+function SetDeviceLabel {  #Change device label
+#$1 - current label
+#$2 - device name ( can be found using -> df -h, should be something like /dev/sdh1, only the sdh1 is needed )
+#$3 - new label
+	
+	UnmountDeviceFromFileSystem $1  #first unmount the device
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to unmount the device\n"
+			return 1
+		fi
+	
+	printf mtools_skip_check=1 > ~/.mtoolsrc   #disable the 64 bit check
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to disable the 64 bit check\n"
+			return 1
+		fi
+	
+	sudo dosfslabel /dev/$2 ::$3   #set a new label to desired path
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed setting the new device label\n"
+			return 1
+		fi
+	
+	printf mtools_skip_check=0 > ~/.mtoolsrc  #enable the 64 bit check
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to enable the 64 bit check\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias sdl='SetDeviceLabel'
+
+
+
+################################################################################################################################################################################
+#                                                                                  INTERPROCESS COMMUNICATION                                                                  #
+################################################################################################################################################################################
+
+
+
+#########################################################################################   OVERVIEW   #########################################################################
+
+
+#In computer science, inter-process communication or interprocess communication refers specifically to the
+#mechanisms an operating system provides to allow processes it manages to share data. Typically, applications
+#can use IPC, categorized as clients and servers, where the client requests data and the server responds to
+#client requests. Many applications are both clients and servers, as commonly seen in distributed computing.
+#Methods for achieving IPC are divided into categories which vary based on software requirements, such as
+#performance and modularity requirements, and system circumstances, such as network bandwidth and latency
+
+
+#########################################################################################   SEMAPHORES   ########################################################################
+
+
+function DisplayExisitingPosixNamedSemaphores {  #List the current existing posix named semaphores
+	
+	ls -al /dev/shm/sem.* | more
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying posix named semaphores\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias depns='DisplayExisitingPosixNamedSemaphores'
+
+
+#The file -> /proc/sys/kernel/sem contains the system semaphore parameters:
+#1. SEMMNI - system wide maximum number of semaphore sets
+#2. SEMMSL - maximum number of semaphores per semid
+#3. SEMMNS - system wide maximum number of semaphores
+#4. SEMOPM - control the number of semaphore operations that can be performed per semop system call
+
+
+function DisplaySystemInformationOnSemaphores {  #Display the value of the system semaphore parameters
+	
+	cat /proc/sys/kernel/sem
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting the system default page size\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dsios='DisplaySystemInformationOnSemaphores'
+
+
+#########################################################################################   GENERAL   #########################################################################
+
+
+#Use the ipcs command, -s - semaphors, -m - shared memory, -q - message queues
+
+
+
+################################################################################################################################################################################
+#                                                                                        SHARED LIBRARY                                                                        #
+################################################################################################################################################################################
+
+
+
+#To use the dl API compile with -ldl
+
+
+function CreatePositionIndependentCodeInC {  #Create position independent code
+#$@ - file name without suffix
+	
+	gcc-7 -c -fpic $@.c -o $@.o
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed compiling position independent code in C\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias cpic='CreatePositionIndependentCodeInC'
+
+
+function CreatePositionIndependentCodeInCPP {  #Create position independent code
+#$@ - file name without suffix
+	
+	g++-7 -c -fpic $@.cpp -o $@.o
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed compiling position independent code in C++\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias cpicpp='CreatePositionIndependentCodeInCPP'
+
+
+function CreateOrAddToSharedLibrary {  #Create or add to shared library
+#$@ - all the arguments given
+#$1 - library name
+	
+	objects=$( printf $@ | cut -d " " -f2- )
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting required object\n"
+			return 1
+		fi
+	
+	gcc-7 -shared -o lib$1.so $objects
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed creating shared library\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias coatsl='CreateOrAddToSharedLibrary'
+
+
+function CompileSharedLibraryWithMainInC {  #Compile the library with main.c
+#$@ - all the arguments given
+#$1 - name of output file
+#$2 - file to be compiled
+#$3 - library name
+	
+	path=$( printf $@ | cut -d " " -f4- )
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting required path\n"
+			return 1
+		fi
+	
+	gcc-7 $2 -I$3 -L$path -ldl -o $1
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed compiling shared library with main progarm in C\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias cslwmc='CompileSharedLibraryWithMainInC'
+
+
+function CompileSharedLibraryWithMainInCPP {  #Compile the library with main.cpp
+#$@ - all the arguments given
+#$1 - name of output file
+#$2 - file to be compiled
+#$3 - library name
+	
+	path=$( printf $@ | cut -d " " -f4- )
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed getting required path\n"
+			return 1
+		fi
+	
+	g++-7 $2 -I$3 -L$path -ldl -o $1
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed compiling shared library with main progarm in C\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias cslwmcpp='CompileSharedLibraryWithMainInCPP'
+
+
+function DisplaySharedLibraryContentsUsingNM {  #See the contents of shared library with nm
+#$@ - name of library without prefix or suffix
+	
+	nm -D --defined-only lib$@.so
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying shared library contents\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dslcnm='DisplaySharedLibraryContentsUsingNM'
+
+
+function DisplaySharedLibraryContentsUsingOBJDUMP {  #See the contents of shared library with objdump
+#$@ - name of library without prefix or suffix
+	
+	objdump -T lib$@.so | grep text
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed displaying shared library contents\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias dslcobj='DisplaySharedLibraryContentsUsingOBJDUMP'
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                 PROGRAMS			                                                                     ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+function DoesProgramExist {  #Check program existence using command
+#$@ - program name
+	
+	command -v $@ >/dev/null 2>&1 && { printf "$@ program exist"; } || { printf "No $@ program located"; }
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to check if program exist\n"
+			return 1
+		fi
+	
+	return 0	
+}
+alias dpe='DoesProgramExist'
+
+
+# type foo >/dev/null 2>&1 || { printf >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+#hash foo 2>/dev/null || { printf >&2 "I require foo but it's not installed.  Aborting."; exit 1; }
+
+
+function UpdatePackages {  #Update packages using apt-get
+	
+	sudo apt-get update
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to update packages\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias up='UpdatePackages'
+
+
+function InstallProgramWithAptget {  #Install program
+#$@ - program name
+	
+	sudo apt-get install $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to install required program\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias installp='InstallProgram'
+
+
+#sudo apt-get install yum
+#sudo apt-get install ascii
+#sudo apt-get install xcowsay
+#sudo apt-get install cowsay
+#sudo apt-get install cmatrix
+#sudo apt-get install toilet
+#sudo apt-get install sl
+#sudo apt-get install fortune
+#sudo apt-get install oneko
+#sudo apt-get install espeak
+#sudo apt-get install libaa_bin
+#sudo apt-get install bb
+#sudo apt-get install funny-manpages
+#sudo apt-get install ostinato
+
+
+#LINUX KEYBOARD SHORTCUTS:
+#	Ctrl+U - Erase entire line
+#
+
+
+
+################################################################################################################################################################################
+#                                                                        VIRTUAL NETWORK COMPUTING ( VNC )                                                                     #
+################################################################################################################################################################################
+
+
+
+##################################################################################   OVERVIEW   ################################################################################
+
+
+#In computing, Virtual Network Computing is a graphical desktop sharing system that uses the Remote Frame
+#Buffer protocol (RFB) to remotely control another computer. It transmits the keyboard and mouse events from
+#one computer to another, relaying the graphical screen updates back in the other direction, over a network
+
+
+#################################################################################   GENERAL USAGE   ############################################################################
+
+
+#To enable copying from vnc to windows and the opposite use - vncconfig
+
+
+
+################################################################################################################################################################################
+#                                                                                  SECURE SHELL ( SSH )                                                                        #
+################################################################################################################################################################################
+
+
+
+######################################################################################   OVERVIEW   ############################################################################
+
+
+#Secure shell provides a secure channel over an unsecured network in a client-server architecture, connecting
+#an SSH client application with an SSH server. Common applications include remote command-line login and
+#remote command execution, but any network service can be secured with SSH. The protocol specification
+#distinguishes between two major versions, referred to as SSH-1 and SSH-2
+
+
+#############################################################################   LOGIN WITHOUT PASSWORD   #######################################################################
+
+
+#Login to a remote linux server without entering password can be accomplished in 3 steps using ssh-keygen
+#and ssh-copy-id. ssh-keygen creates the public and private keys. ssh-copy-id copies the local host's public
+#key to the remote-host's authorized keys file, and set the required permissions The pro6cess:
+#Step 1 - use ssh-keygen on the local host to create the public and private keys ( a given file to store the
+#keys will be required, a default one can aslo be used )
+#Step 2 - use ssh-copy-id to copy the public key to a remote host ( the remote host IP is required )
+#Step 3 - use ssh to login to remote host without entering the password
+
+
+function CreatePublicAndPrivateKeysAndCopyThePublicKeyToRemoteHost {  #Use to allow connecting to remote host using SSH without password
+#$@ - Remote host IP
+	
+	ssh-keygen
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed creating private and public keys\n"
+			return 1
+		fi
+	
+	ssh-copy-id -i ~/.ssh/id_rsa.pub $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed copying the public key to remote host\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias sshnopass='CreatePublicAndPrivateKeysAndCopyThePublicKeyToRemoteHost'
+
+
+#############################################################################   GENERAL USAGE    ################################################################################
+
+
+#To exit ssh use - exit
+
+
+function ConnectToRemoteHostUsingSSH {  #Connect to remote host using SSH
+#$@ - ip address
+	
+	ssh $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed connecting to remote host\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias vm='ConnectToRemoteHostUsingSSH'
+
+
+function ConnectToRemoteHostAsRootUsingSSH {  #Connect to remote host as root using SSH
+#$@ - ip address
+	
+	ssh root@$@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed connecting to remote host\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias vmr='ConnectToRemoteHostAsRootUsingSSH'
+
+
+#The x command
+
+
+#1. To see a stack trace use -> bt
+
+
+
+################################################################################################################################################################################
+#                                                                                          GIT                                                                                 #
+################################################################################################################################################################################
+
+
+
+#Use this to open meld with the changes made compare to old push :
+alias gitdif='git difftool -y'
+
+#Used to see changes made since last checkout:
+alias gits='git status'
+
+#Used to get information on current branch:
+alias gitb='git branch'
+
+#Used to get list of available branches:
+alias gitbl='git branch -a'
+
+#Used to clean the workspace:
+alias gitcl='git clean'
+
+
+#############################################################################   LOCAL REPOSITORY OPERATIONS    #################################################################
+
+
+#stashing takes the dirty state of the working directory - the modified trackes files
+#and staged changes - and saves it on a stack of unfinished changes that can be
+#reapplies at any time
+
+
+#Display current stash list
+alias gitsd='git stash list'
+
+
+#Delete all stashing list
+alias gitsclr='git stash clear'
+
+
+function GitDeleteSpecificStash {  #Delete specific stash from the list
+#$@ - stash number as presented by -> git stash list
+	
+	git stash drop stash@{$@}
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed dropping the required stash\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gitsd='GitDeleteSpecificStash'
+
+
+function GitApplySpecificStah {  #Retrive specific stash to workspace
+#$@ - stash number as presented by -> git stash list ( if the last stash is required don't add number )
+	
+	git stash apply stash@{$@}
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed applying the required stash\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gitsa='GitApplySpecificStah'
+
+
+#############################################################################   REMOTE REPOSITORY OPERATIONS    ################################################################
+
+
+#git clone - git clone all floders
+#git status - git status all folders
+#git checkout - git checkout all folders to branch variable
+#git stash - git stash all folders ( holds all current changes )
+#git stash pop - git stash pop all folders
+#git update - git pull -- rebase all folders
+#git reset - hard branch all folders
+#git clean - fd all folders
+#git push - push origin branch all folders
+#git branch - show branch of all folders
+#git branch create - create new branch
+#git merge tag - merge MERGED_TAG into branch BRANCH
+#foreach git - exceute command in each sdk git folder
+#git coding conv check - run coding convention check on folder, runs only on git changed files
+
+
+function GitCheckOut {  #To get the git repository
+#$@ - directory or file name
+	
+	git checkout $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed checking out required item\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gitco='GitCheckOut'
+
+
+function GitUpdateBranch {  #Change current branch
+#$@ - branch name
+	
+	git stash
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed stashing current changes\n"
+			return 1
+		fi
+	
+	git remote update
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed updating branch\n"
+			return 1
+		fi
+	
+	git fetch origin $1
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed fetching branch\n"
+			return 1
+		fi
+	
+	git rebase --merge FETCH_HEAD
+		if [ $? -eq 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to rebase head\n"
+			return 1
+		fi
+	
+	git stash apply
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to apply the stash on the updated branch\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gitub='GitUpdateBranch'
+
+
+function GitChangeBranch {  #Change current branch
+#$1 - branch name
+#$2 - repository address ( for example - origin )
+	
+	git checkout $1
+		if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed checkout\n"
+				return 1
+		fi
+
+	git remote update
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed updating branch\n"
+			return 1
+		fi
+	
+	git fetch $2 $1
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed fetching branch\n"
+			return 1
+		fi
+	
+	git rebase --merge FETCH_HEAD
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to rebase head\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gitcbb='GitChangeBranch'
+
+
+function GitResetFileHead {  #Use this to remove any changes made on the file since the last check out
+#$@ - file name
+	
+	git reset HEAD $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to reset head\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias rehead='GitResetFileHead'
+
+
+function GitPushToRemoteRepository {  #Use to push required branch to git
+#$@ - branch name
+	
+	git push origin $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to reset head\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gitptrr=' GitPushToRemoteRepository'
+
+
+#2. git stash - stash current working directory
+#3. git fetch  <remote> <bran ch> ( git fetch origin master ) - Update git from remote
+#4. git rebase --merge FETCH_HEAD - apply remote changes locally
+#		if merges appear, merge manually ( git mergetool, kdiff3 )
+#5.  git push  <remote> <branch> ( git push origin master ) - push your commit to remote
+# ( add --dry-run flag to see the push will not result in errors, and then run without it)
+#6. if needed -> git stash apply - unstash the remaining changes
+#		if merges appear, merge manually ( git mergetool, kdiff3 )
+
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                   EDITORS   		                                                                     ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                    ECLIPSE - LUNA                                                                            #
+################################################################################################################################################################################
+
+
+#Useful shortcuts:
+#	Shift+Ctrl+G - Reference
+#	Shift+Ctrl+T - Find a symbol
+#	Shift+Ctrl+R - Open a file by name
+#	F3 - Goto definition
+#	Alt + <- - Goto previous view
+#	Ctrl + B - Add bookmark
+#	Ctrl + L - Goto line
+#	Ctrl + Shift + p - Goto matching bracket
+#	Ctrl + F10 - Show/hide line numbers
+#	Shift+Ctrl+y - Change selection to all lower case
+#	Shift+Ctrl+x - Change selection to all upper case
+#	Ctrl+9 - Search in workspace files
+#	Ctrl+Shift+/ - Add Block Comment around selection ( adds '/... */' )
+#	Ctrl+Alt+G - find selected text in ws
+#	Ctrl+G - find selected declaration in ws
+#	Ctrl+Shift+G - find reference in ws
+#	Ctrl+Shift+T - open element (identifier!)
+#	Ctrl+Shift+P - show matching bracket
+#	Ctrl-Shift+L - show Key Assist
+#	Ctrl-Shift+E - switch to Editor?
+#	Ctrl+W - close file
+#	Shift+Alt+Q P - pkg explorer
+#	Shift+Alt+Q O - outline
+#	Shift+Alt+Q H - cheat cheets
+#	Shift+Alt+Q S - search
+#	Shift+Ctrl+Q - quick diff toggle
+#	Shift+Alt+A - toggle block selection
+#	Ctrl+numpad-divide - toggle folding
+#	Ctrl+t - on a class shows it's hierarchy
+
+
+
+################################################################################################################################################################################
+#                                                                                          VIM                                                                                 #
+################################################################################################################################################################################
+
+
+
+#Vim has two basic modes. One is Insert mode, in which editing the text is done.
+#and Normal mode, which provides efficient ways to naigate and manipulate text.
+#The default is normal mode, to pass into insert mode use -> i , to get back to
+#normal mode use -> esc.
+
+
+#EDITING:
+#Y - copy line
+#dd - delete line
+#p - paste copied line
+
+
+#NAVIGATION - only in normal mode:
+#1. One movment:
+#H - left
+#L - right
+#J - down
+#K - up
+#2. Word movment:
+#W - move to the start of next word
+#B - move to the begining of the word
+#E - move to the end of the word
+#To all of this commands a number can be added before to indicate the number of times
+#the movment should be done, the same can be done with editing, to add a number of
+#times a pattern: number of times + i + pattern + esc
+
+
+#SEARCH:
+#f - is used to find the next occuernce of a charcter ( f+letter )
+#F - is used to find the previous occuernce of a charcter ( F+letter )
+#1. To search for a pattern use -> /pattern and press enter to get the next one
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                        NETWORK - COMPUTER COMMUNICATION                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                        GENERAL                                                                               #
+################################################################################################################################################################################
+
+
+
+#1. sudo apt-get install ostinato
+#2. dmesg - get kernel ring buffer
+#3. lshw - C network
+
+
+function DisplayListOfServicesOfGetaddrinfoSystemCall {  #List of services that can be given to the system call - getaddrinfo
+	
+	GoToDirectory /etc/services
+		if [ $? -eq 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed moving to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias services='DisplayListOfServicesOfGetaddrinfoSystemCall'
+
+
+function InstallVlan {  #Use to install the vlan module into the kernel
+	
+	sudo apt-get install vlan
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to install\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias ivlan='InstallVlan'
+
+
+function CreateVirtualLocalNetwork {  #Create virtual local network ( VLAN )
+#$@ - vlan ID
+	
+	sudo modprobe 8021q
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed changing the mode to 802.1Q\n"
+			return 1
+		fi
+	
+	sudo vconfig eth5 $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed creating virtual local network\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias cvlan='CreateVirtualLocalNetwork'
+
+
+#To check if remote server is up use -> ping ip_address
+#To change the port status down OR up -> ip link set dev device_name state ( ip link set dev eth1 down )
+
+
+
+################################################################################################################################################################################
+#                                                                                      TELNET                                                                                  #
+################################################################################################################################################################################
+
+
+
+#Use it to open an interactive socket to an http server. This lets you manually enter a request, and see the response
+#written to your screen. From a unic prompt -> telnet www.something.com 80
+#Then enter your request line by line, like:
+#	GET /path/file.html HTTP/1.0
+#	[headers here, if any]
+#	[blank line here]
+#After you finish the request, youll see the raw response from the server.
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								  																	 ###
+###      							                                                  MANAGMENT					      				          							     ###
+###      																								  																	 ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                      VERSION                                                                                 #
+################################################################################################################################################################################
+
+
+
+function CreateNewAnnaVersion {  #Start working on a new copy of anna, to prevent destroying previous work
+
+	cd /home/$USER/Anna/AnnaVersions/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	/home/$USER/Anna/Managment/Programs/VersionManagment $ACTIVE_VERSION
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_5  --  $FUNCNAME\n"
+			return 1
+		fi
+	
+	NEW_VERSION="$(GetActiveAnnaVersion)"
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to get new version\n"
+			return 1
+		fi
+	
+	cp -r ./$ACTIVE_VERSION/* ./$NEW_VERSION/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to copy the contents to new version\n"
+			return 1
+		fi
+	
+	if [ -e /home/$USER/Anna/Managment/AnnaVersion/VersionChanges.txt ]
+	then
+
+		printf "\n\n\n\n\nAnna Version ${ACTIVE_VERSION#*_} : $(date)\n" >> /home/$USER/Anna/Managment/AnnaVersion/VersionChanges.txt
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to echo the required pattern into the version changes file\n"
+				return 1
+			fi
+	
+	else
+	
+		printf "This file lists the capabilities of every anna version, and why a new version was created\n\n\n\n\nAnna Version ${NEW_VERSION#*_} : $(date)\n" > /home/$USER/Anna/Managment/AnnaVersion/VersionChanges.txt
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to create the version changes file and echo the required pattern into it\n"
+				return 1
+			fi
+	
+	fi
+
+	#Set the values to the file system related environment variables
+	SetFileSystemEnvironmentVariables
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 "Failed setting the file system related environment variables\n"
+			return 1
+		fi
+	
+	subl /home/$USER/Anna/Managment/AnnaVersion/VersionChanges.txt
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_5 $FUNCNAME "Failed to open the version changes file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias newannaversion='CreateNewAnnaVersion'

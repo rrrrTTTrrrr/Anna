@@ -1,0 +1,363 @@
+#!/bin/bash
+
+
+
+
+function CreateNewCppObjectOrientedInterfaceProjectAndOpenItWithSublime {	#Create new c++ object oriented interface project ( header ) and open it with sublime
+#$1 - probject name
+#$2 - namespace
+#$3 - the character 'd' if the user required to also create a directory for the new project
+
+	ProjectName=$1
+
+	ProjectNameFirstLetterUpperCase="${ProjectName^}_Interface"
+
+
+	if [ "$3" = "d" ]
+	then
+
+		mkdir $ProjectNameFirstLetterUpperCase
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the directory for the new project\n"
+				return 1
+			fi
+
+		g $ProjectNameFirstLetterUpperCase
+			if [ $? -ne 0 ]
+			then
+				return 1
+			fi
+
+	fi
+
+	CreateCppObjectOrientedInterfaceHeaderFile $1 $2
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to set the pattern into the header file\n"
+			return 1
+		fi
+
+	subl $ProjectNameFirstLetterUpperCase*
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to open file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias newoi='CreateNewCppObjectOrientedInterfaceProjectAndOpenItWithSublime'
+
+
+function CreateCppObjectOrientedInterfaceHeaderFile {  #Use to create a new C++ object oriented header file
+#$1 - header file name
+#$2 - namespace
+	
+	HeaderFileName=$1
+	
+	HeaderFileNameUpperCase="${HeaderFileName^^}_INTERFACE"
+	
+	HeaderFileNameFirstLetterUpperCase="${HeaderFileName^}_Interface"
+
+	HeaderFileNameFirstLetterLowerCase="${HeaderFileName,}_Interface"
+
+	Namespace=$2
+
+	NamespaceFirestLetterUpperCase="${Namespace^}"
+
+
+printf "#ifndef ${HeaderFileNameUpperCase}_HPP\n#define ${HeaderFileNameUpperCase}_HPP\n\n\n\
+\
+\
+#include \"../Content/CodingLanguages/C++/LanguageFeatures/C++_LanguageFeatures.hpp\"  //  Macro DEBUG_ONLY, Macro COMMA\n\n\n\
+\
+\
+// This additional headers are only needed in test mode\n\
+#ifdef TEST_MODE\n\
+#endif\n\n\n\
+\
+\
+namespace Universe\n{\n\n\n    \
+\
+\
+// When a type is forward declared, all the compiler knows is that this type exists. It does not know its size, members or methods. This is why its\n	\
+// called incomplete type. Therefore, it can not be used to declare a variable, member or base class since the compiler would need the layout of the\n	\
+// type. In other words, it can not be used for anything that requires information on the specific type. What can be done is declaring pointer and\n	\
+// reference to the incomplete type. The pointer and refernce can act as a variable, argument to a method or as the return type.\n	\
+//\n	\
+// Forward declarations :\n	\
+//\n	\
+//  NONE\n	\
+//\n\n\n	\
+\
+\
+namespace $NamespaceFirestLetterUpperCase\n    {\n\n\n		\
+\
+\
+// Class Information :\n		\
+//\n		\
+//  Purpose :\n		\
+//\n		\
+//		Artifical Inteligence\n		\
+//\n		\
+//  Description :\n		\
+//\n		\
+//		1. The main purpose of an interface is to ensure that the group of objects that inherit from it, will be forced to implement some\n		\
+//		   functionality. The interface will decalre some methods, will not implement them, and the purpose that all the inherting objects\n		\
+//		   will have to implement them. This methods that the interface decalres but doesn't provide a definition are called pure virtual,\n		\
+//		   methods. The syntax for pure virtual methods are :\n		\
+//\n		\
+//				virtual void PureVirutalMethod( UnsignedInteger64bits number ) = 0;\n		\
+//\n		\
+//		   A pure virtual method means, that the object 'lacks' some part of the implementation, and therefore no instances of the object\n		\
+//		   can be created, because it is not a 'complete object'. Now, each object that inherits from it, will be forced to implement that\n		\
+//		   missing functionality, and instances of the inherting object can exist. As said above this is good to ensure a group of objects\n		\
+//		   implement some functionality, but it also gives the ability to point only to the 'interface part' of the object and use it without\n		\
+//		   actually knowing the exact type of the object. This is used, for example, to create containers of pointers to different objects,\n		\
+//		   that all inherit from the same object, and this is also valid to base objects that are not pure interfaces\n		\
+//\n		\
+// 		1. Encapsulation means that the user is only allowed to access certain parts of the object. Encapsulation is acheived in C++ by\n		\
+//		   providing 3 keywords :\n		\
+//\n		\
+//			1. Public - this part is for the user, it is the interface of the object. The user access and manipulate the data inside the\n		\
+//						obejct using the tools presented here. This part will usually contain only methods and not data members. If a data\n		\
+//						member is public all the encapsulation is lost, so it should be avoided in most cases\n		\
+//\n		\
+//			2. Protected - this part is for developing purposes, inheritance. A software developer can inherit from this object and it will\n		\
+//						   be able to access all the data and methods inside this part. This part will usually containt some methods and few\n		\
+//						   data members\n		\
+//\n		\
+//			3. Private - this part is for the developer of the object. This part will probably contain most of the data members of the object\n		\
+//						 and all the methods the developer needed to implement the interface presented in the public part. Every method in this\n		\
+//						 part will end with the suffix __Private\n		\
+//\n		\
+//  Expectations :\n		\
+//\n		\
+//		NONE\n		\
+//\n		\
+//  Possible errors :\n		\
+//\n		\
+//		Too many to count\n		\
+//\n		\
+class $HeaderFileNameFirstLetterUpperCase\n		\
+{\n		\
+public:\n\n\n			\
+\
+\
+// Create a type definition for this object\n			\
+using SelfType = $HeaderFileNameFirstLetterUpperCase;\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//		Default constructor,\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//		User information needed :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		They will come\n			\
+//\n			\
+inline $HeaderFileNameFirstLetterUpperCase() = default;\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//		Copy constructor, will operate correctly even if the other instance is in default state or self assignment\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//		User information needed :\n			\
+//\n			\
+//			other - a reference to the instance that should be copied\n			\
+//\n			\
+//		Information returned to the user :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		They will come\n			\
+//\n			\
+inline $HeaderFileNameFirstLetterUpperCase( const SelfType& other ) = default;\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//      Assignment operator, can handle with self assignment and instances in default state\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//      User information needed :\n			\
+//\n			\
+//          other - a reference to the object that should be copied\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//      A reference to this object\n			\
+//\n			\
+//  Excpectations :\n			\
+//\n			\
+//      NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//      They will come\n			\
+//\n			\
+inline SelfType& operator=( const SelfType& other ) = default;\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//      Move constructor, takes the resources from the other instance, and set it to default state. Can handle with self assignment and instances in default state\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//      User information needed :\n			\
+//\n			\
+//          other - a reference to the object that should be moved\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//      NONE\n			\
+//\n			\
+//  Excpectations :\n			\
+//\n			\
+//      NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//      They will come\n			\
+//\n			\
+inline $HeaderFileNameFirstLetterUpperCase( SelfType&& other ) = default;\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//      Move Assignment operator, delete the current resources of the instance, takes the resources from the other instance and set it to default state\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//      User information needed :\n			\
+//\n			\
+//          other - a reference to the object that should be moved\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//      A reference to this object\n			\
+//\n			\
+//  Excpectations :\n			\
+//\n			\
+//      NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//      They will come\n			\
+//\n			\
+inline SelfType& operator=( SelfType&& other ) = default;\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//		Destructor, does not throw. Only declared to ensure that each object that inherits from this interface, will have a virtual desctructor\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//		User information needed :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//		Information returned to the user :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		They will come\n			\
+//\n			\
+virtual ~$HeaderFileNameFirstLetterUpperCase() = default;\n\n\n			\
+\
+\
+// The following methods are the interface that each inherting object will have to implement :\n\n\n		\
+\
+\
+// The following methods declare the overloaded operators for the object, which each inherting object will have to implement :\n\n\n		\
+\
+\
+};  //  Class $HeaderFileNameFirstLetterUpperCase\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n	\
+\
+\
+}  //  Namespace $NamespaceFirestLetterUpperCase\n\n\
+}  //  Namespace Universe\n\n\n\n\
+\
+\
+#endif  // ${HeaderFileNameUpperCase}_HPP" > ${HeaderFileNameFirstLetterUpperCase}.hpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to echo the basic template into the file\n"
+			return 1
+		fi
+
+	return 0	
+}
+alias cphfwbddddeeeetui='CreateCppObjectOrientedInterfaceHeaderFile'
+
+
+

@@ -1,0 +1,271 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+#									           	   Boot Library - this library is used to provide the boot functionality
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_1=/home/$USER/Anna/AnnaVersions/$(ls /home/$USER/Anna/AnnaVersions/ | sort | tail -1)/Shell/Bash/Libraries/.bash_BootLibrary
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                        ENVIONRMENT FUNCTIONALITY   			                                                             ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+
+
+
+
+################################################################################################################################################################################
+#                                                              BASIC FUNCTIONALITY REQUIRED TO BOOT THE ENVIRONMENT                                                            #
+################################################################################################################################################################################
+
+
+
+###################################################################   EXTRACT CURRENT ANNA CURRENT VERSION   ###################################################################
+
+
+function GetActiveAnnaVersion {  # Use to find the active version and return it
+
+	ls /home/$USER/Anna/AnnaVersions/ | sort | tail -1
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed getting last version of anna\n"
+			return 1
+		fi
+
+	return 0
+}
+alias getactiveversion='GetActiveAnnaVersion'
+
+
+##########################################################################   DISPLAY FUNCTION BODY   ###########################################################################
+
+
+function DisplayFunctionBody {  # Use to display the implementation of the given function name
+# $@ - the name of the required function
+
+	declare -f $@
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed to display the required function body\n"
+			return 1
+		fi
+
+	return 0
+}
+alias DisplayFunctionBody='funcbody'
+
+
+##############################################################################   TIME AND DATE   ##############################################################################
+
+
+function Time {  # Use to get the current time
+
+	date +"%T"
+		if [ $? -ne 0 ]
+		then
+
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed getting the time using the date command\n"
+				
+			return 1
+
+		fi
+
+	return 0
+}
+alias dsfgsgsfdgddgbveeeeeeegbfbfg='Time'
+
+
+function Date {  # Use to get the current date
+
+	date +'%F'
+		if [ $? -ne 0 ]
+		then
+
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed getting the date using the date command\n"
+				
+			return 1
+
+		fi
+
+	return 0
+}
+alias dsfgsgsfdgddgbveeeeeeegbfbfg='Date'
+
+
+function GetTimeInFormat {  # Get current time in color
+	
+	date '+%D %T' | toilet -f term -F border --gay
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed getting time\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gay='GetTimeInFormat'
+
+
+function SetDate {  # Set the date
+# $@ - the date - pattern -> yyyy-dd--mm
+	
+	date --set $@
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed setting date\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias sdate='SetDate'
+
+
+function SetTime {  # Set the time
+# $@ = the time - pattern -> hh:mm:ss
+	
+	date -- set $@
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed setting time\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias stime='SetTime'
+
+
+##############################################################################    FILE SYSTEM   ################################################################################
+
+
+function BackupActiveAnnaVersion {  # Use to create a backup of the active anna version
+
+	rm -rf /home/$USER/Anna/Managment/ActiveVersionBackup/*
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed to clean the active version backup\n"
+			return 1
+		fi
+
+	cp -r  $ROOT_FULL_PATH /home/$USER/Anna/Managment/ActiveVersionBackup/
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed to copy the active anna version\n"
+			return 1
+		fi
+
+	return 0
+}
+alias loldaaalol='BackupActiveAnnaVersion'
+
+
+function StoreLastWorkingDirectoryToFile {  # Use to create a file with the last directory used in bash
+
+	printf "$(pwd)" > $USAGE_DATA_DIRECTORY_FULL_PATH/System.LastUsedWorkingDirectoryInBash
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed to create a file with the last working directory in bash\n"
+			return 1
+		fi
+
+	return 0
+}
+alias stttgfdvft='StoreLastWorkingDirectoryToFile'
+
+
+function MoveToLastWorkingDirectoryBeforeBashSessionEnded {  # Use this to move to the last working directory used before the bash session ended
+
+	cd $(cat $USAGE_DATA_DIRECTORY_FULL_PATH/System.LastUsedWorkingDirectoryInBash)
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed reading the file with last working directory path"
+ 			return 1
+		fi
+
+	return 0
+}
+alias mlast='MoveToLastWorkingDirectoryBeforeBashSessionEnded'
+
+
+function StorePinnedDirectoryToFile {  # Use to create a file with the pinned directory used in bash
+
+	printf "$USER_PINNED_DIRECTORY" > $USAGE_DATA_DIRECTORY_FULL_PATH/System.PinnedWorkingDirectoryInBash
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_1  --  $FUNCNAME  --  Failed to create a file with the pinned directory in bash\n"
+			return 1
+		fi
+
+	return 0
+}
+alias oooooooooolll='StorePinnedDirectoryToFile'
+
+
+
+################################################################################################################################################################################
+#                                                        CREATE A TRAP FOR END OF SESSION TO ENABLE GRACEFULL ENDING      				                                       #
+################################################################################################################################################################################
+
+
+
+function ExitOperations {  # This function will be called when the session has ended to perform all the required operations
+
+	BackupActiveAnnaVersion
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	StoreLastWorkingDirectoryToFile
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	StorePinnedDirectoryToFile
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	return 0
+}
+alias exito='ExitOperations'
+
+
+# When trap is used to notify for a signal, there can only be 1 signal handler, and therfore all the required operations must be called from that signal handler
+
+
+

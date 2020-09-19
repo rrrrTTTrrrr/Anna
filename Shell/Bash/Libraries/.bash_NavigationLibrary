@@ -1,0 +1,335 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#									  Navigation Library - this script is a library containing file system navigation bash source code 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# This variable will store the file full path
+FILE_FULL_PATH_6="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_NavigationLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                         NAVIGATION MAIN FUNCTIONALITY    			                                                     ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+function GoToDirectory {  # The same as cd only remembers current directory
+# $@ - target directory
+
+	PREVIOUS_DIRECTORY=$(pwd)
+			if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed getting current directory\n"
+			return 1
+		fi
+	
+	cd $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed moving to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gg='GoToDirectory'
+
+
+function GoToDirectoryAndDisplayContents {  # The same as cd only remembers current directory, and display the target directory contents
+# $@ - target directory
+
+	GoToDirectory $@
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE_FULL_PATH_6   --   $FUNCNAME\n "
+ 			return 1
+		fi
+	
+	ls
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed listing required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias g='GoToDirectoryAndDisplayContents'
+alias G='GoToDirectoryAndDisplayContents'
+
+
+function ReturnToPreviousDirectory {  # Get back to the directory before the last use of g
+	
+	CURRENT_DIRECTORY=$(pwd)
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed getting current directory\n"
+			return 1
+		fi
+	
+	cd $PREVIOUS_DIRECTORY
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed moving to required directory\n"
+			return 1
+		fi
+	
+	PREVIOUS_DIRECTORY=$CURRENT_DIRECTORY
+	
+	return 0
+}
+alias ret='ReturnToPreviousDirectory'
+alias RET='ReturnToPreviousDirectory'
+
+
+function PinDirectory {  # Use this to pin a specific directory to allow moving to it fast
+# $@ - directory path to pin
+
+	if [ $# -eq 0 ]
+	then
+
+		USER_PINNED_DIRECTORY=$(pwd)
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed getting current directory\n"
+				return 1
+			fi
+
+	else
+
+		USER_PINNED_DIRECTORY=$@
+
+	fi
+
+	return 0
+}
+alias pind='PinDirectory'
+alias PIND='PinDirectory'
+
+
+function GoToPinnedDirectory {  # The same as cd only to a user pinned directory
+
+	PREVIOUS_DIRECTORY=$(pwd)
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed getting current directory\n"
+			return 1
+		fi
+	
+	cd $USER_PINNED_DIRECTORY
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed moving to pinned directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gp='GoToPinnedDirectory'
+alias GP='GoToPinnedDirectory'
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                   DIRECTORIES    			                                                             ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+function GoToActiveAnnaVersion_Root_Directory {  # Move to the root part of anna's active version
+
+	GoToDirectoryAndDisplayContents $ROOT_DIRECTORY_FULL_PATH
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias r='GoToActiveAnnaVersion_Root_Directory'
+alias R='GoToActiveAnnaVersion_Root_Directory'
+
+
+function GoToActiveAnnaVersion_Lab_Directory {  # Move to the lab part of anna's active version
+
+	GoToDirectoryAndDisplayContents $LAB_DIRECTORY_FULL_PATH
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias lab='GoToActiveAnnaVersion_Lab_Directory'
+alias LAB='GoToActiveAnnaVersion_Lab_Directory'
+
+
+function GoToActiveAnnaVersion_Test_Directory {  # Move to the test part of anna's active version
+
+	GoToDirectoryAndDisplayContents $ROOT_DIRECTORY_FULL_PATH
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias test='GoToActiveAnnaVersion_Test_Directory'
+alias TEST='GoToActiveAnnaVersion_Test_Directory'
+
+
+function GoToUsrLocalLibDirectory {  # Move to /usr/local/lib/
+	
+	GoToDirectoryAndDisplayContents /usr/local/lib/
+		if [ $? -ne 0 ]
+		then
+			printf "$FILE  --  $FILE_FULL_PATH_6   --   $FUNCNAME   --   Failed moving to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias l='GoToUsrLocalLibDirectory'
+
+
+
+################################################################################################################################################################################
+#                                                                                  WEB APPLICATION                                                                             #
+################################################################################################################################################################################
+
+
+function GoToValyouation {  # Move to Valyouation
+
+	GoToDirectoryAndDisplayContents $FULL_PATH/Valyouation/WebApplication/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias val='GoToValyouation'
+
+
+function GoToApacheWWWdirectory {  # Move to apache's www directory
+
+	GoToDirectoryAndDisplayContents /var/www/html/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias gow='GoToApacheWWWdirectory'
+
+
+function GoToApacheDirectory {  # Move to apache's directory
+
+	GoToDirectoryAndDisplayContents /etc/apache2/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias goapc='GoToApacheDirectory'
+
+
+function GoToValyouationHTMLdirectory {  # Move to Valyouation HTML directory
+
+	GoToDirectoryAndDisplayContents $FULL_PATH/Valyouation/WebApplication/SourceCode/ClientSide/HTML/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias valhtml='GoToValyouationHTMLdirectory'
+
+
+function GoToValyouationCSSdirectory {  # Move to Valyouation CSS directory
+
+	GoToDirectoryAndDisplayContents $FULL_PATH/Valyouation/WebApplication/SourceCode/ClientSide/CSS/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias valcss='GoToValyouationCSSdirectory'
+
+
+function GoToValyouationJavaScriptdirectory {  # Move to Valyouation JavaScript directory
+
+	GoToDirectoryAndDisplayContents $FULL_PATH/Valyouation/WebApplication/SourceCode/ClientSide/JavaScript/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias valjs='GoToValyouationJavaScriptdirectory'
+
+
+function GoToValyouationPHPdirectory {  # Move to Valyouation PHP directory
+
+	GoToDirectoryAndDisplayContents $FULL_PATH/Valyouation/WebApplication/SourceCode/Scripts/PHP/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_6 $FUNCNAME "Failed to move to required directory\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias valphp='GoToValyouationPHPdirectory'

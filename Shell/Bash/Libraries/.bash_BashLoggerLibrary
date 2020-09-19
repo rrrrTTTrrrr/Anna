@@ -1,0 +1,188 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+#									           	Bash Logger library - this library is used to provide the bash logger functionality
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_2="$BASH_DIRECTORY_FULL_PATH/Libraries/.bash_LoggerLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                                BASH LOGGER    			                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+#The bash logger purpose is to help better deal with bugs in the bash scripts!
+
+
+
+################################################################################################################################################################################
+#                                                              			  	 	  SESSION LOG FILE                                                                 	     	   #
+################################################################################################################################################################################
+
+
+
+function CreateLoggerSessionFile {  #Use to create the bash session log file
+#$@ - the name of the bash session log file
+
+	if [ $LOGGER_STATE -eq 1 ]
+	then
+
+		if [ $LOGGER_OUTPUT -eq 1 ]
+		then
+
+			printf "Bash Logger - $(date)\n\n" > $@
+				if [ $? -ne 0 ]
+				then
+					printf "$FILE_FULL_PATH_2  --  $FUNCNAME  --  Failed creating the session bash log file - $@\n"
+					return 1
+				fi
+
+		fi
+
+	fi
+
+	return 0
+}
+alias wlecvcmmdem='CreateLoggerSessionFile'
+
+
+function OpenLoggerSessionFile {  #Use to open the base session log file
+#$@ - the name of the bash session log file
+
+	if [ $LOGGER_STATE -eq 1 ]
+	then
+
+		if [ $LOGGER_OUTPUT -eq 1 ]
+		then
+
+			EditFileUsingSublime $LOG_FILE_FULL_PATH
+				if [ $? -ne 0 ]
+				then
+					printf "$FILE_FULL_PATH_2  --  $FUNCNAME  --  Failed to open the session bash log file - $@\n"
+					return 1
+				fi
+
+		fi
+
+		printf "There is no session log file, the logger output is set to the screen\n"
+			if [ $? -ne 0 ]
+			then
+				return 1
+			fi
+
+	else
+
+		printf "There is no session log file, the logger is not active\n"
+			if [ $? -ne 0 ]
+			then
+				return 1
+			fi
+
+	fi
+
+	return 0
+}
+alias seelog='OpenLoggerSessionFile'
+
+
+function Logger_WriteLogMessage {  #Use to write a log message to the log file from the scope of a function
+#$1 - the name of the bash session log file
+#$2 - use the environment variable FILE_FULL_PATH_{X} - where X is the number of the specific file
+#$3 - the message to log
+
+	if [ $LOGGER_STATE -eq 1 ]
+	then
+
+		if [ $LOGGER_OUTPUT -eq 1 ]
+		then
+
+			printf "$2   --   $3\n\n" >> $1
+				if [ $? -ne 0 ]
+				then
+					printf "$FILE_FULL_PATH_2  --  $FUNCNAME  --  Failed writing the message to the current session log file\n"
+					return 1
+				fi
+
+		else
+
+			printf "$2   --   $3\n\n"
+				if [ $? -ne 0 ]
+				then
+					printf "$FILE_FULL_PATH_2  --  $FUNCNAME  --  Failed writing the message\n"
+					return 1
+				fi
+
+		fi
+
+	fi
+
+	return 0
+}
+alias wlecvcmmdem='Logger_WriteLogMessage'
+
+
+function Logger_WriteLogMessageFromInsideFunction {  #Use to write a log message to the log file from the scope of a function
+#$1 - the name of the bash session log file
+#$2 - use the environment variable FILE_FULL_PATH_{X} - where X is the number of the specific file
+#$3 - use the environment variable FUNCTION
+#$4 - the message to log
+
+	if [ $LOGGER_STATE -eq 1 ]
+	then
+
+		if [ $LOGGER_OUTPUT -eq 1 ]
+		then
+
+			printf "$2   --   $3   --   $4\n\n" >> $1
+				if [ $? -ne 0 ]
+				then
+					printf "$FILE_FULL_PATH_2  --  $FUNCNAME  --  Failed writing the message to the current session log file\n"
+					return 1
+				fi
+
+		else
+
+			printf "$2   --   $3   --   $4\n\n"
+				if [ $? -ne 0 ]
+				then
+					printf "$FILE_FULL_PATH_2  --  $FUNCNAME  --  Failed writing the message\n"
+					return 1
+				fi
+
+		fi
+
+	fi
+
+	return 0
+}
+alias wlecvcmmdem='Logger_WriteLogMessageFromInsideFunction'

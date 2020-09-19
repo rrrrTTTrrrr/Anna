@@ -1,0 +1,97 @@
+To build a computer the following part are required :
+
+1. Computer case - this is the tricky part, the computer case dimensions and functionality should match all the other
+   components in the system. The computer case usually comes with a front panel with consists of USB 2 and 3 connectors,
+   audio, set power on and reset the computer
+2. Central processing unit ( CPU )
+3. Mother board that support the specific central processing unit ( usually is either supports Intel or AMD processors )
+4. Power supply unit ( PSU ) which should be able to provide for saftey twice as much as the system actually requires.
+   Modular power supply unit means that are no fixed cables on it, and all cables are optional, on the other hand there
+   are semi modular which comes with some cables fixed and the others are choosen
+5. Random access memory - this is the system memory
+6. Non volatile memory - this will store the data when the computer is off
+7. Cooling system or Fans - one for the central processing unit itself and as much needed ( and supported by the
+   motherborad ) system fans
+8. Cables - and lots of them
+
+
+Cables and connections between parts of the system :
+
+
+The motherboard usually comes with the following options for connecting things :
+
+It is very rcommended to buy a large motherboard, the working process with it becoms a lot more easy!
+
+1. There are 2 main power connections : ATX - 24 pins, ATX_12V - 8 pins ( this one is for the central processing unit )
+2. There is a panel of pins which the case front cables for power, reset and non volatile memory working led ( only the 
+   led cable connector plus and negative side matters for the other 2 it is not )
+3. USB 2 and 3 connection ( The USB 2 is molex cable and the USB 3 is looks blue and more advanced )
+4. Central prcoessing unit and system fan connectors
+5. SATA - this is usually to connect the mother board to the non volatile memory ( hard disk, SSD ). This cable usually
+   comes with the mother board package!
+6. Pin panel for case front cable for the audio connectors
+7. A few locations to set the random access memory
+8. A few locations to set the graphic processing unit 
+
+The power supply usually comes with the following options for connecting things :
+
+1. 24 PIN ATX - this is used to provide power to the motherboard 24 pin ATX
+2. 8 PIN CPU - this is used to provide power to the motherboard 8 pin ATX 12V for the central processing unit
+3. 8 PIN PCI-e - this is used to provide power to the graphic processing unit
+4. SATA - this is used to provide power to the non volatile memory ( this can also be used by the system fans to connect
+   directly to the power supply unit without the motherboard between )
+
+The non volatile memory usually comes with the following options for connecting things :
+
+1. SATA - for power - this is connected on the other end to the power supply unit
+2. SATA - for data - this is connected on the other end to the central processing unit
+
+
+The build process itself :
+
+1. Set all the system fans in th case
+2. Set the motherboard input/output panel ( it usually comes with the motherboard and has a metalic side and a side
+   with descriptions for each entry ). There might be one that came with computer case, just remove and install the 
+   motherboard one
+3. Set the central proceesing unit in the mother board. The process is as follows :
+
+	The motherboard comes with a place that has a cover that says remove. Remove it and it will reveal the central
+	processing unit setting location. Next to it would a metal stick, that needs to be pushed up. The important part
+	is not to touch the central prcoessing unit only on the sides, and not press it hard, it should fit easily and 
+	just a little check to make sure it is inside. After the central processing unit is in place the metal stick 
+	should be pulled down to secure the central processing unit. And now it is important to ensure it is kept clean
+
+4. Install the base for the central processing unit cooling method ( if it is a fan system don't install all the system
+   only the part that connects to the motherboard, and not yet the cooling part )
+5. Put the motherboard into its location in the computer case. The computer case usually comes with a set of 'liffetrs'
+   which are connected to the computer case and the motherboard is put on them. Ensure that the motherboard input/output
+   connectors are set correctly into the motherboard input/output panel. Finally, when the motherboard is correctly set,
+   secure it with a screw for each lifter
+6. Now connect all the case front cables and fan cables that should connect to the motehrboard, this should include :
+
+		- USB 2 and 3
+		- POWER ON
+		- RESET POWER
+		- NON VOLATILE WORKING LED
+		- AUDIO
+
+7. Install the random access memory into the motherboard 
+8. Install the non volatile memory, secure it with screws. Connect it to the motherboard with the SATA cable provided with
+   the motherboard package
+9. Install the power supply unit, it maybe be better to connect the cables to it before it is inside the computer case. 
+   This should include :
+
+   		- ATX 24 PIN
+   		- CPU 8 PIN
+   		- SATA POWER
+
+10. Connect the the ATX 24 PIN and CPU 8 PIN to the motherboard
+11. Connect the SATA power to the non volatile memory
+11. Install the central processing cooling system ( it is important to put thermal liquid on the central prcoessing unit
+    between it and the cooling system to allow better condution of heat )
+12. In some cases the fans a fan controller that needs to be connected directly to the power supply unit through
+    a molix connector that connect on one side to the contrroller and on the other side to power supply unit 8 PIN
+    perphrieal
+
+
+Make sure the cables are organized!!

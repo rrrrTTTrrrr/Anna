@@ -1,0 +1,260 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#                               File System Library - this library is used to access files and synchronize data on media devices more easily
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH_7="$BASH_DIRECTORY_FULL_PATH/Libraries/.bash_FileSystemLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                              FILE SYSTEM    			                                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                              			 	    MEMORY ALIASES                           				                                           #
+################################################################################################################################################################################
+
+
+
+alias fuckingmemory='subl ./Infrastructure/Memory/SmartPointers/FunctionAndMethodsPointers/OperatorPointers/RelationalOperatorPointer/RelationalOperatorPointer.hpp'
+alias fuckingmemory2='echo "Before the entry method of the tuple the keyword 'template' should be used most of the time"'
+alias unistd='subl /usr/include/asm-generic/unistd.h'
+alias syscallsig='subl /usr/src/linux-headers-4.15.0-65/include/linux/syscalls.h'
+
+
+alias editcode='subl $BASH_DIRECTORY_FULL_PATH/Libraries/.bash_CodingRelatedFunctionalityLibrary'
+alias editt='subl $BASH_DIRECTORY_FULL_PATH/Libraries/ProgrammingTemplates/.bash_TestPattern'
+alias ipassword='subl $FULL_PATH/Managment/Passwords/Passwords.txt'
+alias editcpp='subl $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/CodingLanguages/C++/LanguageFeatures/C++_LanguageFeatures.hpp'
+alias editass='subl $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/CodingLanguages/Assembly/LanguageFeatures/Assembly_LanguageFeatures.hpp'
+alias editpre='subl $ROOT_DIRECTORY_FULL_PATH/Content/Preprocessor/Preprocessor_Features.hpp'
+alias editassert='subl $ROOT_DIRECTORY_FULL_PATH/Level_0/Level_1/Content/Error/Assert/Assert.hpp'
+alias editboot='subl $BASH_DIRECTORY_FULL_PATH/Boot/.bash_Boot'
+alias editsanity='subl $ROOT_DIRECTORY_FULL_PATH/../Test/GeneralTests/SanityCheck/SanityCheck.hpp'
+alias editoi='subl $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/Object/ObjectInfrastructure/BasicObjectFunctionality/BasicObjectFunctionality.hpp'
+alias editgs='subl $ROOT_DIRECTORY_FULL_PATH/Level_0/Content/Object/ObjectInfrastructure/GetAndSetForMembers/GetAndSetForMembers.hpp'
+
+
+
+################################################################################################################################################################################
+#                                                              			 	BASIC FUNCTIONALITY                           				                                       #
+################################################################################################################################################################################
+
+
+
+function CreateNewDirectory {  # Create a new directory, it can only create the directory in the current working directory
+# $@ - the new directory name
+
+	mkdir $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to create the directory - $@\n"
+			return 1
+		fi
+
+	g $@
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	return 0
+}
+alias mkdirg='CreateNewDirectory'
+
+
+function FindAllFileNamesApperancesMatchingThePattern {  # Use to find all the file names matching a specific pattern
+# $@ - the pattern that needs to be found in the files name
+
+	find . -type f -name $@
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "The find command failed to find all the files with the given pattern in the name\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias findall='FindAllFileNamesApperancesMatchingThePattern'
+
+
+function DeleteAllFilesWithNamesMatchingThePattern {  # Use to delete all the file with names matching a specific pattern
+# $@ - the pattern that needs to be found in the files name
+
+	find . -type f -name $@ -delete
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "The find command failed to delete all the files with the given pattern in the name\n"
+			return 1
+		fi
+	
+	return 0
+}
+alias deleteall='DeleteAllFilesWithNamesMatchingThePattern'
+
+
+function DeleteAllNonSourceCodeFiles {  # Use to delete all the non source code files
+# $@ - the pattern that needs to be found in the files name
+
+	DeleteAllFilesWithNamesMatchingThePattern "*.gch"
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to delete \"*.gch\" files\n"
+			return 1
+		fi
+	
+	DeleteAllFilesWithNamesMatchingThePattern "PreproccessedSourceCode.cpp"
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to delete files with the names \"PreproccessedSourceCode.cpp\"\n"
+			return 1
+		fi
+
+	DeleteAllFilesWithNamesMatchingThePattern "a.out"
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to delete files with the names \"a.out\"\n"
+			return 1
+		fi
+
+	return 0
+}
+alias cleanup='DeleteAllFilesWithNamesMatchingThePattern'
+
+
+function EditBashLibrary {  # Edit bash library located in the directory Bash\Libraries
+# $@ - the required library name only, not the path
+
+	subl $BASH_DIRECTORY_FULL_PATH/Libraries/.bash_$@Library
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to open the base source code file - .bash_$@Library\n"
+			return 1
+		fi
+
+	return 0
+}
+alias editbashl='EditBashLibrary'
+
+
+function EditAllBashLibraries {  # Edit all bash libraries located in the directory Bash\Libraries
+
+	for fileAbsolutePath in $BASH_DIRECTORY_FULL_PATH/Libraries/.bash_*; do
+	    subl $fileAbsolutePath
+	    	if [ $? -ne 0 ]
+	    	then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_0 "Failed opening the file using sublime - $fileAbsolutePath\n"
+				return 1
+			fi
+	done
+
+	return 0
+}
+alias editlibs='EditBashLibrary'
+
+
+function EditProgrammingTemplates {  # Edit the files containing the programming templates using sublime
+
+	for fileAbsolutePath in $BASH_DIRECTORY_FULL_PATH/Libraries/ProgrammingTemplates/.bash_*; do
+	    subl $fileAbsolutePath
+	    	if [ $? -ne 0 ]
+	    	then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_0 "Failed opening the file using sublime - $fileAbsolutePath\n"
+				return 1
+			fi
+	done
+
+	return 0
+}
+alias edittemp='EditProgrammingTemplates'
+
+
+
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                             MEDIA DEVICES SYNCHRONIZATION    			                                                 ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+function CopyAnnaFromHardDiskToMediaDevice {  # Copy all the anna directory into external hard drive
+# $@ - Hard disk label
+
+	IsDeviceConnected $@
+		if [ $? -ne 1 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed because the device is not currently mounted - $@\n"
+			return 1		
+		fi
+
+	if [ -d "/media/$USER/$@/Anna/" ]
+	then
+
+		rm -rf /media/$USER/$@/Anna/*
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to remove the contents of anna from media device - $@\n"
+				return 1
+			fi
+
+	else
+
+		mkdir /media/$USER/$@/Anna/
+			if [ $? -ne 0 ]
+			then
+				Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to create the required directory for anna on the media device - $@\n"
+				return 1
+			fi
+
+	fi
+
+	cp -r /home/$USER/Anna/* /media/$USER/$@/Anna/
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH_7 $FUNCNAME "Failed to copy the contents of anna to media device - $@\n"
+			return 1
+		fi
+
+	return 0
+}
+alias annatodisk='CopyAnnaFromHardDiskToMediaDevice'
+
+
+
+
+

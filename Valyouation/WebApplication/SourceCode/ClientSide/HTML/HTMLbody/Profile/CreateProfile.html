@@ -1,0 +1,80 @@
+<!-- This is the html file for PriceLess home page -->
+
+<!DOCTYPE html>
+
+<html>
+
+  <head>
+
+    <!-- This will be displayed in the upper tab -->
+    <title>ValYouation</title>
+
+    <!-- This is needed to state the type of the file -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <!-- Add all the required javascript files -->
+    <script src="../../Scripts/JavaScript/Validate/GeneralValidateFunctions/ValidateTextWithLettersOnly.js"></script>
+    <script src="../../Scripts/JavaScript/Validate/ValidateForms/ValidateCreateProfileForm.js"></script>
+
+    <!-- Add all the css source files -->
+    <link rel="stylesheet" type="text/css" href="../../CSS/Layout.css">
+    <link rel="stylesheet" type="text/css" href="../../CSS/Style.css">
+
+    <!-- Add the link to the roboto google font -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100" rel="stylesheet"> 
+
+  </head>
+
+
+  <body>
+
+    <!-- This is used to create a CSS grid. The CSS grid helps setting the layout of the content and deal with different sizes of screens -->
+    <div class="Grid">
+
+      <div class="Header">
+
+        <!-- The following includes are used to add the header functionality to this page -->
+
+        <!--#include virtual="../Header/Header.html"-->
+
+      </div>
+
+      <div class="Body">
+
+        <!-- A form to upload all the required information on the user -->
+        <form id="CreateProfileForm" onsubmit="return ValidateCreateProfileForm()" enctype="multipart/form-data" action="CreateProfile.php" method="POST">
+
+          <!-- First name -->
+          <label for="FirstName">First Name:</label>
+          <input type="text" name="FirstName" onKeyUp="KeyPressed( event )" required><br>
+
+          <!-- Last name -->
+          <label for="LastName">Last Name:</label>
+          <input type="text" name="LastName" required><br>
+
+          <!-- Title -->
+          <label for="Title">Title:</label>
+          <input type="text" name="Title" required><br>
+
+          <!-- Describing text -->
+          <label for="DescribingText">Describing Text:</label>
+          <textarea type="text" name="DescribingText" required></textarea><br>
+
+          <!-- Picture -->
+          <!-- MAX_FILE_SIZE must precede the file input field and is set to 2MB ( 2000000 BYTES ) -->
+          <input type="hidden" name="ProfilePictureMaximumSize" value="2000000">
+          <input type="file" name="ProfilePicture" /><br><br>
+
+          <!-- Title -->
+          <input type="submit" name="CreateProfileSubmit" value="Save">
+
+        </form>
+
+      </div>
+
+    </div>
+
+  </body>
+
+</html>
+

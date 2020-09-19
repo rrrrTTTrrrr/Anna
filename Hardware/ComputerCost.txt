@@ -1,0 +1,38 @@
+1. Case - Antec NX100 - 175
+2. Fan - 5 * NOCUTA NF-S12B redux-1200 PWM - 375
+3. Mother board - 896
+4. Mouse - Logitech MX vertical - 620
+5. Keyboard - Kinesis - 531
+6. CPU i9 - INTEL - 2600
+7. Power supply HX1200 - Corsair - 870
+8. RAM VENGEANCE LPX DDR4 32GB - Corsair - 780
+9. CPU fan Noctua NH-D15 - 390 
+10. ssd samsung 860 evo 1TB - 800
+11. Another case the power supply didn't fit - 384 - antec p101 silent
+12. Thermal liquid - 50
+13. Power cable - 38
+14. GTX 2070 - 1900
+
+Total cost -> 9959 fucking SHEKELS! But so far it is amazing, it installed linux in like 2 min!!
+
+
+
+To do :
+
+1. Finish spin lock
+2. Fix Intel_CpuPrivateMemory
+3. Organize unit tests as language, compiler, hardware and all the rest sanity checks
+4. 4 pointers for the memory segments
+5. Implement read, write functionality on the pointers for each memory segment
+6. Implement fixed size array for each memory segment
+7. Start creating type checks
+8. Usage object
+9. Linux system calls
+10. Linux wrappers - thread, signal, process, file system, etc
+11. 
+
+
+FUCK MY LIFE!!! PLEASE HELP!!!
+
+
+

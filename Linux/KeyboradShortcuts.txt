@@ -1,0 +1,16 @@
+Linux keyboard shortcuts :
+
+1. Ctrl + Alt + T - opens new terminal window
+2. Super + Shift + Left / Right - moves window between monitors
+3. Super + Number - opens or moves to the required application in the favorites
+4. Alt + Space - opens preferences window
+5. Ctrl + T - opens a new window in chrome or firefox
+6. Alt + D - moves to the address line in chrome or firefox
+7. Alt + F4 - closes the current application
+8. Ctrl + W - close the current window in the application
+9. Alt + Number - moves to the window with the given number in the same application
+10. Home - move to beginning of the line
+11. End - move to the end of the line
+12 Shift + Home - marks the line from the current position to the beginning of the line
+13. Shift + End - marks the line from the current position to the ending of the line
+14. 

@@ -1,0 +1,569 @@
+#!/bin/bash
+
+
+
+
+
+
+function CreateNewCppTemplateSingletonProjectAndOpenItWithSublime {	#Create new C++ template object oriented project ( header ) and open it with sublime
+#$1 - probject name
+#$2 - namespace
+#$3 - the character 'd' if the user required to also create a directory for the new project
+
+	ProjectName=$1
+
+	ProjectNameFirstLetterUpperCase="${ProjectName^}"
+
+
+	if [ "$3" = "d" ]
+	then
+
+		mkdir $ProjectNameFirstLetterUpperCase
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the directory for the new project\n"
+				return 1
+			fi
+
+		g $ProjectNameFirstLetterUpperCase
+			if [ $? -ne 0 ]
+			then
+				return 1
+			fi
+
+	fi
+
+	CreateCppTemplateSingletonHeaderFile $1 $2
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to set the basic template into the header file\n"
+			return 1
+		fi
+
+	subl $ProjectNameFirstLetterUpperCase* & disown
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to open file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias newts='CreateNewCppTemplateSingletonProjectAndOpenItWithSublime'
+
+
+function CreateCppTemplateSingletonHeaderFile {  #Use to create a new C++ template object oriented singleton header file
+#$1 - header file name
+#$2 - namespace
+	
+	HeaderFileName=$1
+	
+	HeaderFileNameUpperCase="${HeaderFileName^^}"
+	
+	HeaderFileNameFirstLetterUpperCase="${HeaderFileName^}"
+
+	HeaderFileNameFirstLetterLowerCase="${HeaderFileName,}"
+
+	Namespace=$2
+
+	NamespaceFirestLetterUpperCase="${Namespace^}"
+
+
+printf "#ifndef ${HeaderFileNameUpperCase}_HPP\n#define ${HeaderFileNameUpperCase}_HPP\n\n\n\
+\
+\
+#include \"../Content/CodingLanguages/C++/LanguageFeatures/C++_LanguageFeatures.hpp\"  //  Macro DEBUG_ONLY, Macro COMMA\n\
+#include \"../Content/Object/ObjectInfrastructure/BasicObjectFunctionality/BasicObjectFunctionality.hpp\"  //  Macro ObjectInfrastructure_MACRO\n\
+#include \"../Content/Object/ObjectInfrastructure/GetAndSetForMembers/GetAndSetForMembers.hpp\"  //  Macro Get_MACRO, Macro Set_MACRO\n\
+#include \"../Content/Memory/Operations/Operations.hpp\"  //  Class Operations\n\
+#include \"../Content/Error/Assert/Assert.hpp\"  //  Class Assert\n\n\n\
+\
+\
+// This additional headers are only needed in test mode\n\
+#ifdef TEST_MODE\n\
+#include \"TestBranch/SanityCheck/SanityCheck.hpp\"  //  Class SanityCheck\n\
+#endif\n\n\n\
+\
+\
+namespace Universe\n{\n\n\n    \
+\
+\
+// When a type is forward declared, all the compiler knows is that this type exists. It does not know its size, members or methods. This is why its\n	\
+// called incomplete type. Therefore, it can not be used to declare a variable, member or base class since the compiler would need the layout of the\n	\
+// type. In other words, it can not be used for anything that requires information on the specific type. What can be done is declaring pointer and\n	\
+// reference to the incomplete type. The pointer and refernce can act as a variable, argument to a method or as the return type.\n	\
+//\n	\
+// Forward declarations :\n	\
+//\n	\
+//  NONE\n	\
+//\n\n\n	\
+\
+\
+namespace $NamespaceFirestLetterUpperCase\n    {\n\n\n		\
+\
+\
+// Class Information :\n		\
+//\n		\
+//  Purpose :\n		\
+//\n		\
+//		Artifical Inteligence\n		\
+//\n   	    \
+//  Description :\n   	    \
+//\n  	    \
+//		1. This object is a singleton. This means that for every process can only be 1 instnace of the object. The object is then instantied\n		\
+//		   and from there all users should request for an handle To the object and not to create another instnace. This is accomplish be\n		\
+//		   declaring all the constructors private, this way no other object can use it. The second is to create a static method that on\n		\
+//		   first call create an instnace of the object, and all the rest of the time Just\n		\
+//		   return an handle to it\n		\
+//\n		\
+//		2. This object contains an instance of the object \"InstanceState\" to allow each instance of this object to have a defined state\n		\
+//\n		\
+// 		3. Encapsulation means that the user is only allowed to access certain parts of the object. Encapsulation is acheived in C++ by\n		\
+//		   providing 3 keywords :\n		\
+//\n		\
+//			1. Public - this part is for the user, it is the interface of the object. The user access and manipulate the data inside the\n		\
+//						obejct using the tools presented here. This part will usually contain only methods and not data members. If a data\n		\
+//						member is public all the encapsulation is lost, so it should be avoided in most cases\n		\
+//\n		\
+//			2. Protected - this part is for developing purposes, inheritance. A software developer can inherit from this object and it will\n		\
+//						   be able to access all the data and methods inside this part. This part will usually containt some methods and few\n		\
+//						   data members\n		\
+//\n		\
+//			3. Private - this part is for the developer of the object. This part will probably contain most of the data members of the object\n		\
+//						 and all the methods the developer needed to implement the interface presented in the public part. Every method in this\n		\
+//						 part will end with the suffix __Private\n		\
+//\n		\
+//		3. Template arguments :\n		\
+//\n		\
+//			1. Type -\n		\
+//\n  	    \
+//  Expectations :\n		\
+//\n		\
+//		NONE\n		\
+//\n		\
+//  Possible errors :\n		\
+//\n		\
+//		Too many to count\n		\
+//\n		\
+template< typename Type >\n        \
+class $HeaderFileNameFirstLetterUpperCase NotForInheritance\n		\
+{\n		\
+public:\n\n\n			\
+\
+\
+// Create a type definition for this object\n			\
+using SelfType = $HeaderFileNameFirstLetterUpperCase< Type >;\n\n\n			\
+\
+\
+// The next method is used to enforce the singleton policy. On first call it will create the instance and return an handle to it, and on all the other\n			\
+// calls will just return the handle :\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//   	Use this to get an handle to the only instance of the object\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//   	User information needed :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//		Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//   	A reference to the instance\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		They will come\n			\
+//\n			\
+static inline $HeaderFileNameFirstLetterUpperCase< Type >& GetHandle();\n\n\n			\
+\
+\
+// The following methods are the basic methods for each object. How to create, destroy, copy and move the object. This methods if not declared\n			\
+// the compiler generates a basic behavior for them if possible :\n\n\n			\
+\
+\
+// This macro will be used to add all the functionality that is similiar in each object ( beside the name of the object ). It is done as a macro to allow\n			\
+// simple text manipulation, instead of inherting it through an object, which becomes a problem when an object inherits from 2 objects, the first is\n			\
+// any object, but the second is an object that also inhrits from the first object. This can be solved through virtual inheritance but then can only\n			\
+// be one instance of it. Furthermore, each object in the system will need to inherit from it, which will cause inheritance 'chaos'. Therefore, this\n			\
+// macro will be used to add the following methods to each object :\n			\
+//\n			\
+//		1. Reset\n			\
+//		2. State\n			\
+//\n			\
+ObjectInfrastructure_OnlyResetAndState_MACRO( $HeaderFileNameFirstLetterUpperCase, Type )\n\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//   	Destructor, does not throw\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//   	User information needed :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//   	NONE\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		They will come\n			\
+//\n			\
+inline ~$HeaderFileNameFirstLetterUpperCase();\n\n\n			\
+\
+\
+// This part will contain all the get and set methods for the members of the object :\n\n\n			\
+\
+\
+// Member - \n			\
+GetByValue_MACRO( GetMethodName, MemberName, MemberType )\n			\
+GetOnlyIfInstanceIsReady_MACRO( GetMethodName, MemberName, MemberType )\n			\
+SetByValue_MACRO( SetMethodName, MemberName, MemberType )\n			\
+SetOnlyIfInstanceIsReady_MACRO( SetMethodName, MemberName, MemberType )\n\n\n			\
+\
+\
+// The following methods give access and manipulate the data inside this object :\n\n\n\n\n\n\n\n\n\n\n\n			\
+\
+\
+// The following methods declare the overloaded operators for the object :\n\n\n			\
+\
+\
+// The following functions are declared static. Static functions do not belong to any of the instances, but rather to the object. Satic functions only have\n			\
+// access to static data members, which also don't belong to any instance, this means all other data members can not be used. The only purpose then of declaring\n			\
+// a static function is when a private static data member needs to be manipulated, or some functionality needed that does not involve the non static data members\n\n\n			\
+\
+\
+DEBUG_TOOL(\n\n    			\
+\
+\
+// This part of the object is dedicated for testing :\n\n\n    			\
+\
+\
+// Method Information :\n    			\
+//\n    			\
+//  Description :\n    			\
+//\n    			\
+//      This method is used to test the object. It is not part of the implementation, it is only used to find problems with the code\n    			\
+//\n    			\
+//  Required arguments :\n    			\
+//\n    			\
+//      User information needed :\n    			\
+//\n    			\
+//          NONE\n    			\
+//\n    			\
+//      Information returned to the user :\n    			\
+//\n    			\
+//          NONE\n    			\
+//\n    			\
+//  Return value :\n    			\
+//\n    			\
+//			NONE\n    			\
+//\n    			\
+//  Expectations :\n				\
+//\n				\
+//		Please let the test pass lord!!\n				\
+//\n				\
+//  Possible errors :\n    			\
+//\n    			\
+//		It says there are no problems, which is even scarier, did I just wrote a working code??\n    			\
+//\n    			\
+static void Test() __attribute__ (( __unused__ ));\n\n			\
+\
+\
+)  //  End of debug tool\n\n\n		\
+\
+\
+private:\n\n\n			\
+\
+\
+// Disable all copy and move related methods\n			\
+DisableCopyAndMove_MACRO( $HeaderFileNameFirstLetterUpperCase )\n\n\n			\
+\
+\
+// Static data members do not belong to any instance, they belong to the object. Like every global variable it is created with the start of the program\n			\
+// and only destroyed when the program ends. The access to the static member is bound to this object of course\n\n\n			\
+\
+\
+// The following methods are private. This means that only public or protected methods can use them, in other words they not part of the interface, but\n			\
+// rather help implement it :\n\n\n			\
+\
+\
+// The default constructor are decalred private, to enforce the singleton policy. This way the default constructor can not be called directly\n\n\n			\
+\
+\
+// Method Information :\n    	    \
+//\n    	    \
+//  Description :\n			\
+//\n			\
+//   	Default Constructor,\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//   	User information needed :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//   	NONE\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		They will come\n			\
+//\n			\
+inline $HeaderFileNameFirstLetterUpperCase();\n\n\n			\
+\
+\
+// Friend class or friend function can access private and protected members of other object in which it is declared as friend. It is sometimes useful\n			\
+// to allow a particular object to access private members of other object. The declration of such function is private, because these functions are part\n			\
+// of the implemntation, which the user should not be aware of. The use of this functions is not limited to the object's scope. One of the problems that\n			\
+// friend declaration solves is when the object needs to be as a right side operand in expressions. Every method in the object is implicitly added a pointer\n			\
+// to the location of the object data with the name \"this\", and to enable this the method must be called from an existing instance. This means that the\n			\
+// object can only be implemented as the left side operand of an expression with methods, and friend functions and objects does not have this limitation\n\n\n		\
+\
+\
+// Assert all the requirements on the template arguments provided to the object. To perform a compile time assert the C++ language provides\n			\
+// the keyword 'static_assert', which receives an expression and an error message to display if the expression result is false. The important\n			\
+// thing is that the expression is evaluted during compile time, and therefore if the expression is false the compilation will be terminated\n			\
+// and the error message will be displayed. This method should not be used, because it does nothing during run time\n			\
+CompileTimeAssert(  );\n\n\n		\
+\
+\
+};  //  Class $HeaderFileNameFirstLetterUpperCase\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//	*******************************************************   END PART OF DECLRATIONS, PUBLIC METHODS IMPLMENTATION TIME   *******************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n		\
+\
+\
+// Method Information :\n		\
+//\n		\
+//  Description :\n		\
+//\n		\
+//   	Use this to get an handle to the only instance of the object\n		\
+//\n		\
+//  Required arguments :\n		\
+//\n		\
+//   	User information needed :\n		\
+//\n		\
+//			NONE\n		\
+//\n		\
+//		Information returned to the user :\n		\
+//\n		\
+//          NONE\n		\
+//\n		\
+//  Return value :\n		\
+//\n		\
+//   	A reference to the instance\n		\
+//\n		\
+//  Expectations :\n		\
+//\n		\
+//		NONE\n		\
+//\n		\
+//  Possible errors :\n		\
+//\n		\
+//		They will come\n		\
+//\n		\
+template< typename Type >\n        \
+static inline $HeaderFileNameFirstLetterUpperCase< Type >& $HeaderFileNameFirstLetterUpperCase< Type >::GetHandle()\n		\
+{\n		\
+\
+	// Create a static instance of the object, this will cause the object to be created on the first call of the method, and it will only be destroyed\n		\
+	// with the end of the program\n		\
+	static SelfType ${HeaderFileNameFirstLetterLowerCase}OnlyInstance;\n\n		\
+\
+	// Return an handle to the object\n		\
+	return ( ${HeaderFileNameFirstLetterLowerCase}OnlyInstance );\n		\
+\
+}\n\n\n		\
+\
+\
+// Method Information :\n		\
+//\n		\
+//  Description :\n		\
+//\n		\
+//   	Destructor, does not throw\n		\
+//\n		\
+//  Required arguments :\n		\
+//\n		\
+//   	User information needed :\n		\
+//\n		\
+//          NONE\n		\
+//\n		\
+//      Information returned to the user :\n		\
+//\n		\
+//          NONE\n		\
+//\n		\
+//  Return value :\n		\
+//\n		\
+//   	NONE\n		\
+//\n		\
+//  Expectations :\n		\
+//\n		\
+//		NONE\n		\
+//\n		\
+//  Possible errors :\n		\
+//\n		\
+//		They will come\n		\
+//\n		\
+template< typename Type >\n        \
+inline $HeaderFileNameFirstLetterUpperCase< Type >::~$HeaderFileNameFirstLetterUpperCase()\n		\
+{\n		\
+\
+    // Check if the object is in default state, then noting needs to be done\n		\
+    ReturnIfExpressionIsTrue_MACRO( member_state.Get() == InstanceState::Default )\n		\
+\
+}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//  ***********************************************************   TEMPLATE OR INLINE STATIC METHODS IMPLEMENTATION   ************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//  ********************************************************   TEMPLATE OR INLINE PURE VIRTUAL METHODS IMPLEMENTATION   *********************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//	**********************************************************   TEMPLATE OR INLINE PROTECTED METHODS IMPLEMENTATION   **********************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//	***********************************************************   TEMPLATE OR INLINE PRIVATE METHODS IMPLEMENTATION   ***********************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n		\
+\
+\
+// Method Information :\n		\
+//\n		\
+//  Description :\n		\
+//\n		\
+//   	Default Constructor,\n		\
+//\n		\
+//  Required arguments :\n		\
+//\n		\
+//   	User information needed :\n		\
+//\n		\
+//          NONE\n		\
+//\n		\
+//      Information returned to the user :\n		\
+//\n		\
+//          NONE\n		\
+//\n		\
+//  Return value :\n		\
+//\n		\
+//   	NONE\n		\
+//\n		\
+//  Expectations :\n		\
+//\n		\
+//		NONE\n		\
+//\n		\
+//  Possible errors :\n		\
+//\n		\
+//		They will come\n		\
+//\n		\
+template< typename Type >\n        \
+inline $HeaderFileNameFirstLetterUpperCase< Type >::$HeaderFileNameFirstLetterUpperCase() :\n		\
+member_state(),\n		\
+{}\n\n\n		\
+\
+\
+// ***************************************************************   NESTED CLASS PUBLIC METHODS IMPLEMENTATION -    ************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+// **********************************************************   INLINE AND TEMPLATE FRIEND FUNCTIONS IMPLEMENTATION   ***********************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+// *********************************************************************************   TESTING   ********************************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n		\
+\
+\
+DEBUG_TOOL(\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//      This method is used to test the object. It is not part of the implementation, it is only used to find problem with the code that does implement\n			\
+//		the functionality\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//      User information needed :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//      Information returned to the user :\n			\
+//\n			\
+//          NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//      1. true - if the object passed the test\n			\
+//      2. false - otherwise\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		1. An assertion failed - class Exception is thrown\n			\
+//		2. There is no more free memory space - class std::bad_alloc is thrown\n			\
+//		3. \n			\
+//\n			\
+template< typename Type >\n			\
+void $HeaderFileNameFirstLetterUpperCase< Type >::Test()\n			\
+{\n			\
+	// Perform a sanity to ensure that all the methods that are common among all objects, for example defualt constructor, copy constructor,\n			\
+	// destructor, swap and more, seem to work correctly\n			\
+	Testing::SanityCheck::NoCopyOrMove< SelfType,  >();\n			\
+}\n\n		\
+\
+\
+)  //  End of debug tool\n\n\n\n\n\n\n\n\n\n\n\n    \
+\
+\
+}  //  Namespace $NamespaceFirestLetterUpperCase\n\n\
+}  //  Namespace Universe\n\n\n\
+\
+\
+#endif  // ${HeaderFileNameUpperCase}_HPP" > ${HeaderFileNameFirstLetterUpperCase}.hpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to echo the basic template into the file\n"
+			return 1
+		fi
+
+	return 0	
+}
+alias kmdsvknfkn='CreateCppTemplateSingletonHeaderFile'
+
+
+

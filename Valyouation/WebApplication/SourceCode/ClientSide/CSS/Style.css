@@ -1,0 +1,60 @@
+/* This css file is used to give the style for the HTML elements */
+
+
+/* Style the header style */
+.HeaderStyle {
+    
+    background-color: #DCDCDC;
+}
+
+  .LogoStyle {
+  }
+
+  .MotivationStyle {
+  }
+
+  .HowItWorksStyle {
+  }
+
+  .LoginStyle {
+  }
+
+  .JoinStyle {
+  }
+
+  .ProfileStyle {
+  }
+
+
+/* Style the body */
+.BodyStyle {
+
+    background-color: #DCDCDC;
+    text-align: center;
+}
+
+  .MainTextStyle {
+
+    color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    font-size: 300%;
+    color: #333333;
+  }
+
+  .SearchBoxStyle {
+
+  }
+
+
+/* Style the footer */
+.FooterStyle {
+
+    background-color: #B3B3B3;
+}
+
+
+/* This class is used by all links to prevent the under line */
+.NoUnderLineForLink {
+  text-decoration: none; 
+  color: #333333;
+}

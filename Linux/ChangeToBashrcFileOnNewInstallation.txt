@@ -1,0 +1,19 @@
+After installing Linux, the following changes need to be made to the '.bashrc' file, to enable 'Anna' :
+
+1. Add the following command to the file, it will add the 'Boot' script to the bash source code :
+
+	if [ -f /home/$USER/Anna/AnnaVersions/$(ls /home/$USER/Anna/AnnaVersions/ | sort | tail -1)/Shell/Bash/Boot/.bash_Boot ]; then
+	    . /home/$USER/Anna/AnnaVersions/$(ls /home/$USER/Anna/AnnaVersions/ | sort | tail -1)/Shell/Bash/Boot/.bash_Boot
+	fi
+
+2. Disable 'ls' colors by commenting out the line :
+
+	alias ls='ls --color=auto'
+
+
+
+The following is the command to install all the drivers :
+
+	sudo add-apt-repository ppa:graphics-drivers/ppa
+	sudo apt update
+	sudo ubuntu-drivers autoinstall

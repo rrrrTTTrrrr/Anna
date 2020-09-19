@@ -1,0 +1,254 @@
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#									 GNU Compiler Library - the library will provide the functionality for using the GNU compiler and debugger 			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#This variable will store the file full path
+FILE_FULL_PATH="$BASH_DIRECTORY_FULL_PATH/Scripts/Libraries/.bash_GNUcompilerLibrary"
+
+################################################################################################################################################################################
+################################################################################################################################################################################
+###      																								                                                                     ###
+###      							                                         GNU COMPILER LIBRARY                                                                            ###
+###      																								                                                                     ###
+################################################################################################################################################################################
+################################################################################################################################################################################
+
+
+
+
+################################################################################################################################################################################
+#                                                                                  INSTALL                                                                                     #
+################################################################################################################################################################################
+
+
+
+function SetCLANGrepository {  #Use to add the Clang-6 repository to apt-get
+
+	wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH $FUNCNAME "failed to get the apt-key for clang-6 llvm\n"
+			return 1
+		fi
+
+	sudo apt-add-repository "deb http://apt.llvm.org/xenial/ llvm-toolchain-xenial-6.0 main"
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH $FUNCNAME "failed to add the clang-6 repository\n"
+			return 1
+		fi
+
+	sudo apt-get update
+		if [ $? -ne 0 ]
+		then
+			Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH $FUNCNAME "failed to update apt-get repository paths\n"
+			return 1
+		fi
+}
+alias gggggggglkslkmjs="SetCLANGrepository"
+
+
+function Install_CLANG6 {  #Check if clang-6 is currently installed on the system and if not install it
+#This is the ppa  ->  
+#					  
+
+	Does3DpartyExecutableExist clang-6.0
+		if [ $? -ne 1 ]
+		then
+
+			sudo apt-get install -y clang-6.0
+				if [ $? -ne 0 ]
+				then
+					Logger_WriteLogMessageFromInsideFunction $LOG_FILE_FULL_PATH $FILE_FULL_PATH $FUNCNAME "failed to install gcc8\n"
+					return 1
+				fi
+
+		fi
+
+	return 0
+}
+alias bghfnmyhjmjkkgggggkkkk='Install_CLANG6'
+
+
+
+################################################################################################################################################################################
+#                                                                                 	  COMPILE FLAGS                                                                            #
+################################################################################################################################################################################
+
+
+
+
+ ########################################################################   Compiler optimizations   ###########################################################################
+
+
+
+
+
+
+################################################################################################################################################################################
+#                                                                                 	COMPILE FUNCTIONS                                                                          #
+################################################################################################################################################################################
+
+
+
+function CLANG_CompileFileDebugCPP17 {  #Use this function to compile a program as C++ standard 17, with debug information and compiler optimizations
+#$@ - file name
+
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	clang -m64 -masm=intel -std=c++17 -Werror -Wpedantic -Wall -Wextra -g -D TEST_MODE $@	
+		if [ $? -ne 0 ]
+		then
+			printf "\n\n\n\n\n\n\n\n\n"
+			return 1
+		fi
+	
+	./a.out
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	return 0
+}
+alias cl17d='CLANG_CompileFileDebugCPP17'
+
+
+function CompileFileReleaseCPP17 {  #Use this function to compile a program as C++ standard 17 and compiler optimizations
+#$@ - file name
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	clang -m64 -masm=intel -std=c++17 -Werror -Wpedantic -Wall -Wextra -O3 $@	
+		if [ $? -ne 0 ]
+		then
+			printf "\n\n\n\n\n\n\n\n\n"
+			return 1
+		fi
+	
+	./a.out
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	return 0
+}
+alias cl17r='CompileFileReleaseCPP17'
+
+
+function CLANG_CompileFileDebugIgnoreWarningsCPP17 {  #Use this function to compile a program as C++ standard 17, with debug information and compiler optimizations
+												#but ignore compiler warnings
+#$@ - file name
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	clang -m64 -masm=intel -std=c++17 -Wpedantic -Wall -Wextra -g -D TEST_MODE $@	
+		if [ $? -ne 0 ]
+		then
+			printf "\n\n\n\n\n\n\n\n\n"
+			return 1
+		fi
+	
+	./a.out
+	
+	printf "\n\n\n\n\n\n\n\n\n"
+	
+	return 0
+}
+alias cl17dnw='CLANG_CompileFileDebugIgnoreWarningsCPP17'
+
+
+function CLANG_CreateAssemblyCodeAndDisplayTheResult {  #Use this function to compile a program as C++ standard 17, with debug information 
+												  #and compiler optimizations only until the assembly code, and display the content
+#$@ - file name
+	
+	clang -S -m64 -masm=intel -std=c++17 -Werror -Wpedantic -Wall -Wextra $@	
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	EditFileUsingSublime $@.s
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi	
+	
+	return 0
+}
+alias clcreateassembly='CLANG_CreateAssemblyCodeAndDisplayTheResult'
+
+
+function CLANG_CreatePreprocessedCodeAndDisplayTheResult {  #Use this function to only preprocess the source code and display the content
+#$@ - file name
+	
+	clang -E -o PreproccessedSourceCode.cpp $@	
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+
+	EditFileUsingSublime PreproccessedSourceCode.cpp
+		if [ $? -ne 0 ]
+		then
+			return 1
+		fi
+		
+	return 0
+}
+alias clcreateprepro='CLANG_CreatePreprocessedCodeAndDisplayTheResult'
+
+
+################################################################################################################################################################################
+#                                                                            GNU DEBUGGER ( GDB )                                                                              #
+################################################################################################################################################################################
+
+
+
+
+
+#################################################################################   OVERVIEW    ################################################################################
+
+
+
+
+#########################################################################   STEPPING THROUGH THE CODE    #######################################################################
+
+
+
+
+
+########################################################################    BREAKPOINTS AND WATCHPOINTS    #####################################################################
+
+
+
+
+
+###################################################################################   PRINT OPTIONS     ########################################################################
+
+
+
+ 

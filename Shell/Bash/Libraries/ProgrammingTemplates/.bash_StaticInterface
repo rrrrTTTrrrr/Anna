@@ -1,0 +1,315 @@
+#!/bin/bash
+
+
+
+
+
+
+function CreateNewCppStaticInterfaceProjectAndOpenItWithSublime {	#Create new C++ static interface project ( header ) and open it with sublime
+#$1 - probject name
+#$2 - namespace
+#$3 - the character 'd' if the user required to also create a directory for the new project
+
+	ProjectName=$1
+
+	ProjectNameFirstLetterUpperCase="${ProjectName^}"
+
+
+	if [ "$3" = "d" ]
+	then
+
+		mkdir $ProjectNameFirstLetterUpperCase
+			if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to create the directory for the new project\n"
+				return 1
+			fi
+
+		g $ProjectNameFirstLetterUpperCase
+			if [ $? -ne 0 ]
+			then
+				return 1
+			fi
+
+	fi
+
+	CreateCppStaticInterfaceHeaderFile $1 $2
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to set the basic template into the header file\n"
+			return 1
+		fi
+
+	CreateCppStaticInterfaceFile $1 $2
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to set the pattern into the cpp file\n"
+			return 1
+		fi
+
+	subl $ProjectNameFirstLetterUpperCase* & disown
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to open file using sublime\n"
+			return 1
+		fi
+
+	return 0
+}
+alias newosi='CreateNewCppStaticInterfaceProjectAndOpenItWithSublime'
+
+
+function CreateCppStaticInterfaceHeaderFile {  #Use to create a new C++ static interface header file
+#$1 - header file name
+#$2 - namespace
+	
+	HeaderFileName=$1
+	
+	HeaderFileNameUpperCase="${HeaderFileName^^}"
+	
+	HeaderFileNameFirstLetterUpperCase="${HeaderFileName^}"
+
+	HeaderFileNameFirstLetterLowerCase="${HeaderFileName,}"
+
+	Namespace=$2
+
+	NamespaceFirestLetterUpperCase="${Namespace^}"
+
+
+printf "#ifndef ${HeaderFileNameUpperCase}_HPP\n#define ${HeaderFileNameUpperCase}_HPP\n\n\n\
+\
+\
+#include \"../Content/CodingLanguages/C++/LanguageFeatures/C++_LanguageFeatures.hpp\"  //  Macro DEBUG_ONLY, Macro COMMA\n\
+#include \"../Content/Error/Assert/Assert.hpp\"  //  Class Assert\n\n\n\
+\
+\
+// This additional headers are only needed in test mode\n\
+#ifdef TEST_MODE\n\
+#endif\n\n\n\
+\
+\
+namespace Universe\n{\n\n\n    \
+\
+\
+// When a type is forward declared, all the compiler knows is that this type exists. It does not know its size, members or methods. This is why its\n	\
+// called incomplete type. Therefore, it can not be used to declare a variable, member or base class since the compiler would need the layout of the\n	\
+// type. In other words, it can not be used for anything that requires information on the specific type. What can be done is declaring pointer and\n	\
+// reference to the incomplete type. The pointer and refernce can act as a variable, argument to a method or as the return type.\n	\
+//\n	\
+// Forward declarations :\n	\
+//\n	\
+//  NONE\n	\
+//\n\n\n	\
+\
+\
+namespace $NamespaceFirestLetterUpperCase\n    {\n\n\n		\
+\
+\
+// Class Information :\n		\
+//\n		\
+//  Purpose :\n		\
+//\n		\
+//		Artifical Inteligence\n		\
+//\n   	    \
+//  Description :\n   	    \
+//\n		\
+//		1. This object is used only to wrap some static methods, which can be used without any instance of the object. Then this object is\n		\
+//		   an interface which conatins only static methods, and does not need to never be instantied\n		\
+//\n		\
+//		2. This object has all the methods to create, destory, copy and move disabled to ensure that no instances of it will be created\n		\
+//\n		\
+//  Expectations :\n		\
+//\n		\
+//		NONE\n		\
+//\n		\
+//  Possible errors :\n		\
+//\n		\
+//		Too many to count\n		\
+//\n		\
+class $HeaderFileNameFirstLetterUpperCase\n		\
+{\n		\
+public:\n\n\n			\
+\
+\
+// The following functions are declared static. Static functions do not belong to any of the instances, but rather to the object. Satic functions\n			\
+// only have access to static data members, which also don't belong to any instance, this means all other data members can not be used. The only\n			\
+// purpose then of declaring a static function is when a private static data member needs to be manipulated, or some functionality needed that\n			\
+// does not involve the non static data members\n\n\n			\
+\
+\
+DEBUG_TOOL(\n\n				\
+\
+\
+// This part of the object is dedicated for testing :\n\n\n				\
+\
+\
+// Method Information :\n				\
+//\n				\
+//  Description :\n				\
+//\n				\
+//		This method is used to test the object. It is not part of the implementation, it is only used to find problems with the code\n				\
+//\n				\
+//  Required arguments :\n				\
+//\n				\
+//		User information needed :\n				\
+//\n				\
+//			NONE\n				\
+//\n				\
+//		Information returned to the user :\n				\
+//\n				\
+//			NONE\n				\
+//\n				\
+//  Return value :\n				\
+//\n				\
+//			NONE\n				\
+//\n				\
+//  Expectations :\n				\
+//\n				\
+//		Please let the test pass lord!!\n				\
+//\n				\
+//  Possible errors :\n				\
+//\n				\
+//		It says there are no problems, which is even scarier, did I just wrote a working code??\n				\
+//\n				\
+static void Test() __attribute__ (( __unused__ ));\n\n			\
+\
+\
+)  //  End of debug tool\n\n\n		\
+\
+\
+private:\n\n\n			\
+\
+\
+// Disable all default generated methods - constructor, destructor, copy constructor, assignment operator, move constructor and move assignment operator\n			\
+NoInstances_MACRO( $HeaderFileNameFirstLetterUpperCase )\n\n\n		\
+\
+\
+};  //  Class $HeaderFileNameFirstLetterUpperCase\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//  ***********************************************************   TEMPLATE OR INLINE STATIC METHODS IMPLEMENTATION   ************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//	**********************************************************   TEMPLATE OR INLINE PROTECTED METHODS IMPLEMENTATION   **********************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//	***********************************************************   TEMPLATE OR INLINE PRIVATE METHODS IMPLEMENTATION   ***********************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    \
+\
+\
+}  //  Namespace $NamespaceFirestLetterUpperCase\n\n\
+}  //  Namespace Universe\n\n\n\
+\
+\
+#endif  // ${HeaderFileNameUpperCase}_HPP" > ${HeaderFileNameFirstLetterUpperCase}.hpp
+		if [ $? -ne 0 ]
+		then
+			printf "$FUNCNAME  --  Failed to echo the basic template into the file\n"
+			return 1
+		fi
+
+	return 0	
+}
+alias zqsqxqww='CreateCppStaticInterfaceHeaderFile'
+
+function CreateCppStaticInterfaceFile {  #Use to create a new C++ object oriented cpp
+#$1 - cpp file name
+#$2 - namespace
+	
+	CppFileName=$1
+	
+	CppFileNameUpperCase="${CppFileName^^}"
+	
+	CppFileNameFirstLetterUpperCase="${CppFileName^}"
+
+	Namespace=$2
+
+	NamespaceFirestLetterUpperCase="${Namespace^}"
+
+
+printf "#ifndef  ${CppFileNameUpperCase}_CPP\n#define  ${CppFileNameUpperCase}_CPP\n\n\n\
+\
+\
+#include \"${CppFileNameFirstLetterUpperCase}.hpp\"\n\n\n\
+\
+\
+// This additional headers are only needed in test mode\n\
+#ifdef TEST_MODE\n\
+#endif\n\n\n\
+\
+\
+namespace Universe \n{\n\n    \
+namespace $NamespaceFirestLetterUpperCase\n    {\n\n\n		\
+\
+\
+// Forward declarations :\n		\
+//\n		\
+//  NONE\n		\
+//\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//  ********************************************************************   STATIC FUNCTIONS IMPLEMENTATION   ********************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+//	********************************************************************   PRIVATE METHODS IMPLEMENTATION   *********************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
+\
+\
+// *********************************************************************************   TESTING   ********************************************************************************\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n		\
+\
+\
+DEBUG_TOOL(\n\n			\
+\
+\
+// Method Information :\n			\
+//\n			\
+//  Description :\n			\
+//\n			\
+//		This method is used to test the object. It is not part of the implementation, it is only used to find problem with the code that does implement\n			\
+//		the functionality\n			\
+//\n			\
+//  Required arguments :\n			\
+//\n			\
+//		User information needed :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//		Information returned to the user :\n			\
+//\n			\
+//			NONE\n			\
+//\n			\
+//  Return value :\n			\
+//\n			\
+//		1. true - if the object passed the test\n			\
+//		2. false - otherwise\n			\
+//\n			\
+//  Expectations :\n			\
+//\n			\
+//		NONE\n			\
+//\n			\
+//  Possible errors :\n			\
+//\n			\
+//		1. An assertion failed - class Exception is thrown\n			\
+//		2. There is no more free memory space - class std::bad_alloc is thrown\n			\
+//		3. \n			\
+//\n			\
+void $CppFileNameFirstLetterUpperCase::Test()\n			\
+{}\n\n		\
+\
+\
+)  //  End of debug tool\n\n\n\n\n\n\n\n\n\n\n\n    \
+\
+\
+}  //  Namespace $NamespaceFirestLetterUpperCase\n\n
+}  //  Namespace Universe\n\n\n\
+\
+\
+#endif  //  ${CppFileNameUpperCase}_CPP\n\n\n\n\n\n" > ${CppFileNameFirstLetterUpperCase}.cpp
+		if [ $? -ne 0 ]
+			then
+				printf "$FUNCNAME  --  Failed to echo the basic template into the file\n"
+				return 1
+			fi
+
+	return 0
+}
+alias cpfwbbbrrrrrrbbbbbbbbbtuu='CreateCppStaticInterfaceFile'
+
