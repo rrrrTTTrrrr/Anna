@@ -1,0 +1,73 @@
+Directory name - Root
+
+
+Description :
+
+
+	In C++ the main different from C code, exist the concept of 'object'. This concept wraps memory location and functionality on that memory locations together.
+	The concept in C was to build functions or procedures, that allow some specific functionality, and based on those to build more complex functionality, and so
+	on. This means that there are "lower" functionality that all other "higher" functions use to perfrom their tasks, it was like a pyramid. You must have solid
+	base that others can use. When building software the structure of the functionality must be well defined, what uses what, what depends on what, and this is
+	just for the actual functionality, it will be given the name 'functionality branch'. In C++ another parallel level of construction was added. As said 
+	above C++ wants to group functionality and memory space together into 'objects'. Building this objects require also much functionality, which part of it relay 
+	on the functionality structure from above, and some on new functionality just to create better objects. As well there is the need to create them fast, well
+	defined, documented, tested and hopefully understood to the next coder ( if this will ever happen ) that will use this. This will be called 'object branch'.
+	Then there are 2 paths for the structure of the software, the first is the actual functionality of the software, like all the memory operations copy, swap and 
+	more which are needed by all, and the second is the functionality to build objects which is also needed by almost all. The seperation is of course not perfect
+	because the functionaliy to build amazing objects depends on the functionaliy structure as well and vice versa, but a real try to correctly structure the 
+	software is made.
+
+	Each level can only use parts of the same level or lower, not higher!
+
+	The vision is currently, that the root directory will contain only the language features and the metaprogramming directory, which only uses the language features!
+
+
+																		      ROOT
+
+															   ( CodingLanguages, Metaprogramming )
+
+															   				  |  |
+															   				  |  |
+															   				  |  |
+													Functionality branch	  |	 |             Object branch
+													---------------------------  ---------------------------
+													|							   				  		   |
+													|													   | 
+										First level	|													   | First level
+													|													   |
+											   		|					   								   |
+
+				---------------------------	 ErrorHandling						  					ObjectInfrastructure  ---------------------------
+				|							 																									  	|
+				|				( Exception, ErrnoException, Assert )			  ( State + Macros to add methods that the functionality			|
+   Second level	|							 								 				    is the same in all objects )					  	| Second level
+				|							 																									  	|
+				|							 																									  	|
+
+		 RawFunctionality						    																				       		Abilities
+
+		    ( Memory )						  										                   
+
+									              				
+
+
+
+	Functionality branch directories description :
+
+	1. RawFunctionality :
+
+		This directory will be used to contian all the raw functions, C style functions, that will be the root of the software structure. This is functions that will be
+		used by almost all higher layers, and are the basic for almost every opertion, and are the basic for building objects ( to allow copy, move and more ) Currently 
+		the only required functions for this directory are the memory operations :
+
+			1. copy
+			2. swap
+			3. compare
+			4. Reverse
+			5. Set
+			6. AsciiStringSize
+			7. DuplicateValueToFillEightBytes
+			8. AllBitsOnAboveIndex 
+			9. AllBitsOffAboveIndex 
+			10. AllBitsOnAboveAndIncludingIndex 
+			11. AllBitsOffAboveAndIncludingIndex
